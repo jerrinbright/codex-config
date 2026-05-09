@@ -21,6 +21,7 @@ Write a handoff artifact that lets another Codex session continue without re-dis
    - Run lightweight repo checks when useful: `git status --short`, `git diff --stat`, and focused `git diff -- <files>`.
    - Inspect relevant files already discussed or changed.
    - Include only commands actually run or explicitly recommended.
+   - Capture all data locations needed to replicate the work, especially Modal volume paths, remote dataset paths, temp output directories, cache paths, artifact paths, and local staging paths.
 
 3. Write the handoff:
    - Be concrete and chronological where it helps.
@@ -28,6 +29,7 @@ Write a handoff artifact that lets another Codex session continue without re-dis
    - Call out unresolved issues and risks plainly.
    - Explain commands by purpose, not just raw syntax.
    - List file paths with one-line reasons each.
+   - Clearly state where data was accessed from and where temporary/intermediate/final results were written.
 
 4. If creating or updating a file, keep it repo-local unless the user specifies another location.
 
@@ -69,6 +71,13 @@ Known bugs, blockers, uncertain assumptions, safety constraints, or things not y
 ## Files Touched Or Reviewed
 - `path/to/file`: changed/reviewed; why it matters.
 
+## Data And Artifact Paths
+- Modal volumes: exact `/vol/...` paths used and what each contains.
+- Modal temp/output paths: exact remote temp/result directories and whether they are persistent.
+- Local temp/output paths: exact repo-relative or absolute paths used for generated artifacts.
+- Source data paths: datasets, episode ids, object keys, R2/S3 paths, Mongo fields, or other inputs accessed.
+- Result artifacts: filenames/directories needed to reproduce, inspect, or compare the work.
+
 ## Decisions
 Choices made and the reason for each.
 
@@ -102,6 +111,19 @@ When writing a scope file, add explicit boundaries:
 - Prefer bullets over prose for scanability.
 - Use absolute dates when relevant.
 - Use repo-relative paths for files.
+- Use exact absolute paths for Modal, remote, mounted volume, temp, cache, dataset, and artifact locations when they are needed to reproduce the work.
 - Do not include secrets, tokens, private credentials, or large pasted logs.
 - Summarize long outputs; include only key lines needed for continuity.
 - If verification was not run, say so directly.
+
+## Replication Path Rules
+
+- Treat data and artifact paths as first-class handoff content, not incidental details.
+- For Modal work, always include:
+  - environment name, such as `jerrin`
+  - app/function/job name or run id when known
+  - volume names and mounted paths
+  - exact `/vol/...` paths read from or written to
+  - local mirror/download paths if files were copied back
+  - temp paths and whether they are disposable or required for follow-up
+- If a path is unknown but important, add it under `Issues And Risks` as missing replication information.
