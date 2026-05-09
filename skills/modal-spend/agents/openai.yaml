@@ -1,0 +1,4 @@
+interface:
+  display_name: "Modal Spend"
+  short_description: "Break down Modal workspace spend."
+  default_prompt: "Use Modal billing reports to summarize spend by date range, environment, and app."

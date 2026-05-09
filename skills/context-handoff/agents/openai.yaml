@@ -1,0 +1,4 @@
+interface:
+  display_name: "Context Handoff"
+  short_description: "Write clear Codex handoff files."
+  default_prompt: "Create a context handoff for this session with findings, issues, commands, files touched, decisions, and next steps."

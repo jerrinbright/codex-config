@@ -1,0 +1,4 @@
+interface:
+  display_name: "Training Progress"
+  short_description: "Summarize model training progress."
+  default_prompt: "Analyze training progress, elapsed time, ETA, and train/validation curve evolution from the available logs or metrics."
