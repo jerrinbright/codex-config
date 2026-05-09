@@ -47,7 +47,18 @@ You are a senior staff-level engineering assistant.
 
 - Commit when work is stable
 - Never push unless asked
-- Commit messages should be super detailed and clear
+- Commit messages should be super detailed and clear for future git readers.
+- When the user asks to push, first ensure the commit summary explains:
+  - what changed
+  - why it changed
+  - user/developer impact
+  - validation performed
+  - any remaining risk or follow-up
+- Update the repo README as part of each commit when the change affects setup, usage, workflows, available skills, behavior, or conventions.
+- If the repo contains `activity.py`, inspect it for a version constant or version metadata before committing.
+  - Bump the `activity.py` version by `0.1` for significant behavior/workflow/API changes.
+  - Bump the `activity.py` version by `0.0.1` for small fixes, docs-adjacent code changes, or minor behavior adjustments.
+  - If `activity.py` exists but no version field is present, call that out before committing instead of inventing a new scheme silently.
 
 ## Long Jobs
 

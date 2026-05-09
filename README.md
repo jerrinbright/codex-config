@@ -65,6 +65,21 @@ If not, restart Codex CLI.
 
 ---
 
+## Commit And Push Convention
+
+When Codex is asked to commit or push:
+
+- Write a detailed commit message for future git readers.
+- Include what changed, why it changed, developer/user impact, validation, and remaining risk.
+- Update the repo README whenever the change affects setup, usage, workflows, available skills, behavior, or conventions.
+- If the target repo contains `activity.py`, inspect it before committing:
+  - bump its version by `0.1` for significant behavior, workflow, or API changes
+  - bump its version by `0.0.1` for small fixes or minor behavior adjustments
+  - if no version field exists in `activity.py`, mention that explicitly before committing
+- Never push unless the user explicitly asks.
+
+---
+
 ## Add New Skill
 
 mkdir -p skills/my-skill
@@ -125,4 +140,3 @@ ls ~/.agents/skills
 If skill not triggering:
 - fix description
 - or invoke explicitly
-
