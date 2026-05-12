@@ -17,7 +17,8 @@ codex-config/
     ├── code-review/
     ├── code-review-response/
     ├── infra-reference/
-    └── modal-guidelines/
+    ├── modal-guidelines/
+    └── split-stereo-hands-videos/
 
 ---
 
@@ -140,3 +141,15 @@ ls ~/.agents/skills
 If skill not triggering:
 - fix description
 - or invoke explicitly
+
+---
+
+## Available Skills
+
+- `code-review`: review code changes and write findings to `code_review.md`
+- `code-review-orchestration`: coordinate review and response loops
+- `code-review-response`: verify and address review feedback
+- `context-handoff`: create concise handoff/status files for Codex sessions
+- `modal-spend`: summarize Modal spend by environment and app
+- `split-stereo-hands-videos`: split stereo-hands `recording_primary.mp4` and `recording_secondary.mp4` into six corrected camera videos for `run_multi_camera_unified_v3.py`
+- `training-progress`: analyze ML training logs and progress

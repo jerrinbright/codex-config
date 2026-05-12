@@ -1,0 +1,4 @@
+interface:
+  display_name: "Split Stereo Hands Videos"
+  short_description: "Split stereo-hands recordings into cameras."
+  default_prompt: "Split this stereo-hands episode directory into six corrected camera videos."
