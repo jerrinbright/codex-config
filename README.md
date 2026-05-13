@@ -16,6 +16,7 @@ codex-config/
 └── skills/
     ├── code-review/
     ├── code-review-response/
+    ├── html-video-viewer/
     ├── infra-reference/
     ├── modal-guidelines/
     └── split-stereo-hands-videos/
@@ -150,6 +151,7 @@ If skill not triggering:
 - `code-review-orchestration`: coordinate review and response loops
 - `code-review-response`: verify and address review feedback
 - `context-handoff`: create concise handoff/status files for Codex sessions
+- `html-video-viewer`: create static HTML video/result viewers, serve them with byte-range support, and provide pasteable file/tunnel links
 - `modal-spend`: summarize Modal spend by environment and app
 - `mongo-episode-query-discovery`: discover Mongo episode queries from project metadata, upstream-written episode fields, and requested output file keys
 - `split-stereo-hands-videos`: split stereo-hands `recording_primary.mp4` and `recording_secondary.mp4` into six corrected camera videos for `run_multi_camera_unified_v3.py`

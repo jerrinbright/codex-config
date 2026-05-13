@@ -1,0 +1,4 @@
+interface:
+  display_name: "HTML Video Viewer"
+  short_description: "Build and serve video result viewers."
+  default_prompt: "Create a local HTML viewer for these results, verify video seeking works, and provide pasteable file and tunnel links."
