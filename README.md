@@ -151,5 +151,6 @@ If skill not triggering:
 - `code-review-response`: verify and address review feedback
 - `context-handoff`: create concise handoff/status files for Codex sessions
 - `modal-spend`: summarize Modal spend by environment and app
+- `mongo-episode-query-discovery`: discover Mongo episode queries from project metadata, upstream-written episode fields, and requested output file keys
 - `split-stereo-hands-videos`: split stereo-hands `recording_primary.mp4` and `recording_secondary.mp4` into six corrected camera videos for `run_multi_camera_unified_v3.py`
 - `training-progress`: analyze ML training logs and progress

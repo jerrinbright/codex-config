@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mongo Episode Query Discovery"
+  short_description: "Discover indexed Mongo episode queries."
+  default_prompt: "Find a safe MongoDB episode query for the requested dataset or output file. Start from project metadata when no episode id is known, inspect upstream-written episode fields when needed, and return an index-conscious filter plus projection."
