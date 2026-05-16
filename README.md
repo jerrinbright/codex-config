@@ -5,6 +5,7 @@ Personal Codex CLI configuration.
 This repo stores:
 - Global rules (`AGENTS.md`)
 - Reusable skills (`skills/*/SKILL.md`)
+- Compatibility skill shims for legacy `SKILLS.md` files
 
 ---
 
@@ -28,31 +29,47 @@ codex-config/
 
 Clone repo:
 
-git clone git@github.com:jerrinbright/codex-config.git ~/jb_ws/codex-config
+git clone git@github.com:jerrinbright/codex-config.git ~/Desktop/jb_ws/codex-config
 
 Create folders:
 
 mkdir -p ~/.codex
 mkdir -p ~/.agents
+mkdir -p ~/.codex/skills
+mkdir -p ~/.agents/skills
 
 Create symlinks:
 
-ln -sf ~/jb_ws/codex-config/AGENTS.md ~/.codex/AGENTS.md
-ln -sfn ~/jb_ws/codex-config/skills ~/.agents/skills
+ln -sf ~/Desktop/jb_ws/codex-config/AGENTS.md ~/.codex/AGENTS.md
+ln -sf ~/Desktop/jb_ws/codex-config/AGENTS.md ~/.agents/AGENTS.md
+
+For each skill directory that contains `SKILL.md`, symlink the whole directory into both skill roots:
+
+ln -sfn ~/Desktop/jb_ws/codex-config/skills/training-progress ~/.codex/skills/training-progress
+ln -sfn ~/Desktop/jb_ws/codex-config/skills/training-progress ~/.agents/skills/training-progress
+
+For legacy skill directories that contain `SKILLS.md`, keep a directory shim and symlink it as `SKILL.md`:
+
+mkdir -p ~/.codex/skills/modal-guidelines
+ln -sf ~/Desktop/jb_ws/codex-config/skills/modal-guidelines/SKILLS.md ~/.codex/skills/modal-guidelines/SKILL.md
 
 ---
 
 ## Verify
 
 ls -l ~/.codex/AGENTS.md
+ls -l ~/.agents/AGENTS.md
+ls -l ~/.codex/skills
 ls -l ~/.agents/skills
-readlink -f ~/.codex/AGENTS.md
-readlink -f ~/.agents/skills
+readlink ~/.codex/AGENTS.md
+readlink ~/.agents/AGENTS.md
 
 Expected:
 
-~/.codex/AGENTS.md -> ~/jb_ws/codex-config/AGENTS.md
-~/.agents/skills -> ~/jb_ws/codex-config/skills
+~/.codex/AGENTS.md -> ~/Desktop/jb_ws/codex-config/AGENTS.md
+~/.agents/AGENTS.md -> ~/Desktop/jb_ws/codex-config/AGENTS.md
+
+Codex Desktop reads custom skills from `~/.codex/skills`. Some CLI/agent setups also read `~/.agents/skills`, so this repo keeps both locations wired to the same checked-out skill files.
 
 ---
 
@@ -133,11 +150,12 @@ Add to .gitignore:
 
 Check symlinks:
 
-readlink -f ~/.codex/AGENTS.md
-readlink -f ~/.agents/skills
+readlink ~/.codex/AGENTS.md
+readlink ~/.agents/AGENTS.md
 
 Check skills:
 
+ls ~/.codex/skills
 ls ~/.agents/skills
 
 If skill not triggering:
