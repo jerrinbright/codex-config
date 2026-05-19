@@ -19,6 +19,7 @@ codex-config/
     ├── html-video-viewer/
     ├── infra-reference/
     ├── modal-guidelines/
+    ├── session-recovery/
     └── split-stereo-hands-videos/
 
 ---
@@ -154,5 +155,6 @@ If skill not triggering:
 - `html-video-viewer`: create static HTML video/result viewers, serve them with byte-range support, and provide pasteable file/tunnel links
 - `modal-spend`: summarize Modal spend by environment and app
 - `mongo-episode-query-discovery`: discover Mongo episode queries from project metadata, upstream-written episode fields, and requested output file keys
+- `session-recovery`: recover prior Codex sessions from repo/task/job context hints and return resume commands plus evidence
 - `split-stereo-hands-videos`: split stereo-hands `recording_primary.mp4` and `recording_secondary.mp4` into six corrected camera videos for `run_multi_camera_unified_v3.py`
 - `training-progress`: analyze ML training logs and progress

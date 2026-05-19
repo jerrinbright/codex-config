@@ -1,0 +1,4 @@
+interface:
+  display_name: "Session Recovery"
+  short_description: "Recover prior Codex sessions from hints"
+  default_prompt: "Recover the relevant Codex session from context hints."
