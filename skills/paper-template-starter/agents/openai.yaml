@@ -1,0 +1,5 @@
+interface:
+  display_name: "Paper Template Starter"
+  short_description: "Create starter LaTeX paper workspaces"
+  brand_color: "#17263A"
+  default_prompt: "Use $paper-template-starter to create a rough LaTeX research paper template for my new project."
