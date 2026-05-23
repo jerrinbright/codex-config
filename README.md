@@ -20,7 +20,11 @@ codex-config/
     ├── html-video-viewer/
     ├── infra-reference/
     ├── modal-guidelines/
+<<<<<<< HEAD
     ├── session-recovery/
+=======
+    ├── paper-to-beamer/
+>>>>>>> e0549f2 (Add paper-to-beamer conference deck skill)
     └── split-stereo-hands-videos/
 
 ---
@@ -174,5 +178,6 @@ If skill not triggering:
 - `modal-spend`: summarize Modal spend by environment and app
 - `mongo-episode-query-discovery`: discover Mongo episode queries from project metadata, upstream-written episode fields, and requested output file keys
 - `session-recovery`: recover prior Codex sessions from repo/task/job context hints and return resume commands plus evidence
+- `paper-to-beamer`: turn LaTeX research papers into 10-minute conference Beamer decks with speaker notes
 - `split-stereo-hands-videos`: split stereo-hands `recording_primary.mp4` and `recording_secondary.mp4` into six corrected camera videos for `run_multi_camera_unified_v3.py`
 - `training-progress`: analyze ML training logs and progress

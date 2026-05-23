@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paper to Beamer"
+  short_description: "Turn LaTeX papers into conference decks"
+  default_prompt: "Use $paper-to-beamer to create a 10-minute conference Beamer deck from this LaTeX paper."
