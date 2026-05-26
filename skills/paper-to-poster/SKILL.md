@@ -51,6 +51,8 @@ python3 <skill_dir>/scripts/extract_latex_paper_context.py /path/to/paper --main
    - Identify the one-sentence thesis, problem, key insight, method pipeline, main quantitative result, best qualitative evidence, limitations, and code/project link.
    - Prefer claims already stated in the paper. Do not invent metrics, datasets, or qualitative results.
    - If a value is missing or marked `XX`, keep it as a placeholder or write a visible TODO in `poster_notes.md`.
+   - Before writing TeX, create a short content plan that names the selected sections, the dominant method visual, the dominant results visual, and the single takeaway readers should remember.
+   - If the user selected sections, honor that selection. If no sections are selected, use the detailed default section set below.
 
 4. Choose poster layout.
    - Default to a baposter-style landscape grid unless the user specifies another size.
@@ -70,6 +72,9 @@ python3 <skill_dir>/scripts/extract_latex_paper_context.py /path/to/paper --main
    - Keep poster text short: headings should carry the story, body copy should be scannable, and bullets should be sparse.
    - Convert dense tables into small result callouts when possible.
    - Include a compact QR/code/contact block if the paper has a repository URL or project URL.
+   - Target 300-800 total words for an A0/48x36 poster. Keep individual boxes around 50-100 words maximum, and make the poster visually dominant rather than prose dominant.
+   - Allocate space as if 60-70% of the poster should be visual material when suitable paper figures/tables exist.
+   - Use no more than one dense technical/equation box unless the user explicitly asks for a theory-heavy poster.
 
 6. Validate.
    - Run validation from the output folder:
@@ -83,6 +88,7 @@ latexmk -pdf -interaction=nonstopmode -file-line-error poster.tex
    - After a successful compile, clean temporary LaTeX build files with `latexmk -c poster.tex` or remove only generated scratch files. Keep `poster.pdf`.
    - Fix compile errors caused by the generated poster.
    - Do not change the original paper unless the user explicitly asks.
+   - Inspect the log for overfull boxes, missing figure paths, and text cutoff risk. If the layout is crowded, shorten text or merge sections rather than reducing font to unreadable sizes.
 
 ## Poster Structure
 
@@ -101,11 +107,16 @@ Use this default baposter-style structure and adjust to the paper:
 
 Do not overdo the number of boxes. Prefer these sections first; add ablation/limitations only when the paper needs them and there is space.
 
+When the user or DraftPilot UI provides a section subset, include those sections first. It is acceptable to merge small bottom-row sections such as `References`, `Future Work`, and `Contact` when space is tight, but do not silently drop a requested scientific section such as `Methodology`, `Dataset`, `Results`, or `Loss / Training`.
+
 ## Quality Rules
 
 - Make the poster understandable in 30 seconds, useful in 3 minutes, and defensible in 10 minutes.
 - Use large visual anchors: one method figure and one results figure should dominate.
 - Avoid paragraph walls. If a section needs more than 60-90 words, compress it or move detail to notes.
+- Keep each visual focused on one idea. Avoid tiny multi-stage diagrams with five or more steps; split or simplify them into a poster-readable figure.
+- Use large readable labels in figures and captions. Poster figures should be understandable from several feet away.
+- Use generous margins. Nothing should touch the physical poster edge or box border.
 - Preserve exact dataset names, method names, metric directions, table numbers, and figure meanings from the paper.
 - Do not copy full paper paragraphs into the poster.
 - Do not invent figure files. If a desired visual is missing, add a TODO in `poster_notes.md`.
