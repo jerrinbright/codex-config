@@ -2,9 +2,9 @@
 
 ## Default Poster
 
-- Size: 48 x 36 inches, landscape.
-- Layout: 3 columns, with title band across the top.
-- Reading order: thesis, problem, method, evidence, takeaway.
+- Size: landscape A0 / 48 x 36 style unless the user specifies otherwise.
+- Layout: baposter-style 4-column grid with title band across the top.
+- Reading order: objectives, introduction, methodology, dataset/highlights, results, technical details, conclusion, bottom-row references/contact.
 - Target density: roughly 700-1000 words total, less when figures are strong.
 
 ## Visual Hierarchy
@@ -19,28 +19,35 @@
 
 ### Left Column
 
-- Problem and motivation.
-- Key contributions.
-- Dataset/task setup.
-- Small schematic or example input.
+- `Objectives` at top.
+- `Dataset` below objectives.
+- `Highlights` filling the remaining height.
 
-### Center Column
+### Middle Column
 
-- Main method pipeline.
-- Technical mechanism, training stages, or system architecture.
-- One compact equation only if it is central to the contribution.
+- `Introduction` at top aligned with objectives.
+- `Results` below, compact and table/callout driven.
 
-### Right Column
+### Right Two Columns
 
-- Quantitative results.
-- Qualitative examples.
-- Ablation/analysis.
-- Limitations, conclusion, and QR/code/contact.
+- `Methodology` wide box at top with the main architecture/pipeline figure.
+- `Loss / Training` or technical-details box below methodology when needed.
+- `Conclusion` wide box with qualitative result visual and concise takeaways.
+- Bottom row: `References`, `Future Work`, `Contact`.
+
+## Baposter Defaults
+
+- Use `\documentclass[landscape,a0paper,fontscale=0.345]{baposter}` when the class is available.
+- Use `headerborder=closed`, `colspacing=1em`, white background, dark blue/gray headers, and rounded-left content boxes for a familiar academic poster style.
+- Keep logos optional. Do not insert missing logo filenames that will break compilation.
+- Use `\graphicspath{{../figures/}{../Figures/}{../}}` because generated posters live in `poster/`.
+- If `baposter.cls` is unavailable, create a portable fallback that still looks like a landscape poster grid. Do not fall back to a portrait-like article layout.
 
 ## Design Rules
 
 - Use headings as claims, not generic labels when possible.
 - Prefer concise bullets over paragraphs.
+- Keep each header box short. A poster is not a compressed paper.
 - Use no more than 2-3 font sizes for content hierarchy.
 - Keep body text large enough for real poster viewing.
 - Use color to group concepts and highlight best results, not as decoration.

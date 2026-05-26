@@ -52,15 +52,17 @@ python3 <skill_dir>/scripts/extract_latex_paper_context.py /path/to/paper --main
    - If a value is missing or marked `XX`, keep it as a placeholder or write a visible TODO in `poster_notes.md`.
 
 4. Choose poster layout.
-   - Default to a 48 x 36 inch landscape poster unless the user specifies another size.
-   - Use 3 columns for most method papers.
-   - Use 4 columns only when the paper has many compact result panels and the text remains readable.
-   - For portrait/A0 requests, adapt the same hierarchy rather than squeezing the landscape layout.
+   - Default to a baposter-style landscape grid unless the user specifies another size.
+   - Use 4 visual columns for the default method-paper poster.
+   - Keep the poster box-based: title band, left motivation/dataset/highlights column, center results column, wide methodology and technical-detail boxes, and a compact bottom row.
+   - Avoid making a portrait-looking document on a landscape page.
+   - For portrait/A0 requests, adapt the same box hierarchy rather than squeezing the landscape layout.
    - Read `references/scientific_poster_blueprint.md` when choosing a layout or checking poster quality.
 
 5. Create LaTeX poster source.
-   - Prefer a portable LaTeX poster implementation that compiles in common TeX installs.
-   - Use `beamerposter` only when it is available or already used locally. Otherwise use `article` with `geometry`, `multicol`, `graphicx`, `xcolor`, `tikz`, and `tcolorbox` if available.
+   - Prefer a `baposter`-style source for the default scientific-poster output: `\documentclass[landscape,a0paper,fontscale=0.345]{baposter}` with `\headerbox{...}{...}{...}` sections.
+   - Do not copy third-party template comments, branding, or license text into generated posters. Use the layout pattern, not the template verbatim.
+   - If `baposter.cls` is unavailable and the user needs immediate compilation, use a portable fallback that visually mimics baposter with `article`, `geometry`, `xcolor`, `multicol`, and boxed sections.
    - Add a paper-root search path such as `\graphicspath{{../}}` because the poster lives in `poster/`.
    - Use relative paths for figures, usually the same paths used by the paper.
    - Keep poster text short: headings should carry the story, body copy should be scannable, and bullets should be sparse.
@@ -82,20 +84,20 @@ latexmk -pdf -interaction=nonstopmode -file-line-error poster.tex
 
 ## Poster Structure
 
-Use this baseline and adjust to the paper:
+Use this default baposter-style structure and adjust to the paper:
 
-1. Title, authors, affiliations, and code/project link.
-2. One-sentence thesis or key takeaway.
-3. Motivation and problem.
-4. Core insight or contributions.
-5. Method overview pipeline.
-6. Technical details that matter for credibility.
-7. Main quantitative results.
-8. Main qualitative results.
-9. Ablations or analysis.
-10. Limitations, conclusion, and next steps.
+1. Title band: title, authors, affiliation, optional logo/code/project link.
+2. `Objectives`: short problem statement and goal.
+3. `Introduction`: compact motivation and gap.
+4. `Methodology`: wide top-right box spanning two columns with the main architecture/pipeline figure.
+5. `Dataset`: input data, evaluation setting, sequences, and preprocessing summary.
+6. `Highlights`: 3-5 contribution bullets.
+7. `Results`: compact table/callout, not a dense paper table.
+8. `Loss / Training` or `Technical Details`: only if the method needs equations/stages for credibility.
+9. `Conclusion`: qualitative result visual plus 3 concise takeaways.
+10. Bottom row: `References`, `Future Work`, and `Contact`.
 
-For method-heavy papers, give the center column to the pipeline and training/optimization strategy. For results-heavy papers, give the center and right columns to quantitative and qualitative evidence.
+Do not overdo the number of boxes. Prefer these sections first; add ablation/limitations only when the paper needs them and there is space.
 
 ## Quality Rules
 
