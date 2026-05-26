@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paper To Poster"
+  short_description: "Create scientific posters from LaTeX papers."
+  default_prompt: "Create a conference scientific poster from this LaTeX paper."
