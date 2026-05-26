@@ -16,6 +16,7 @@ Unless the user asks otherwise, create a `poster/` folder inside the paper works
 - `poster/poster.tex`: poster source.
 - `poster/poster.pdf`: compiled poster, when validation succeeds.
 - `poster/poster_notes.md`: design notes, missing-content TODOs, and a short presenter walkthrough.
+- `poster/baposter.cls` plus its notice/license, when generated through DraftPilot or when a bundled copy is available.
 
 If a file already exists, write a non-conflicting filename such as `poster_v2.tex`.
 Use extraction context and LaTeX build files as temporary artifacts. Do not keep `poster_context.md`, `.aux`, `.log`, `.out`, `.fls`, `.fdb_latexmk`, `.synctex.gz`, or other scratch files unless the user asks for debugging artifacts.
@@ -62,7 +63,8 @@ python3 <skill_dir>/scripts/extract_latex_paper_context.py /path/to/paper --main
 5. Create LaTeX poster source.
    - Prefer a `baposter`-style source for the default scientific-poster output: `\documentclass[landscape,a0paper,fontscale=0.345]{baposter}` with `\headerbox{...}{...}{...}` sections.
    - Do not copy third-party template comments, branding, or license text into generated posters. Use the layout pattern, not the template verbatim.
-   - If `baposter.cls` is unavailable and the user needs immediate compilation, use a portable fallback that visually mimics baposter with `article`, `geometry`, `xcolor`, `multicol`, and boxed sections.
+   - If DraftPilot already copied `poster/baposter.cls`, keep that class file and its notice/license beside the poster source so compilation is portable.
+   - If `baposter.cls` is unavailable and no bundled copy exists, use a portable fallback that visually mimics baposter with `article`, `geometry`, `xcolor`, `multicol`, and boxed sections.
    - Add a paper-root search path such as `\graphicspath{{../}}` because the poster lives in `poster/`.
    - Use relative paths for figures, usually the same paths used by the paper.
    - Keep poster text short: headings should carry the story, body copy should be scannable, and bullets should be sparse.
@@ -125,6 +127,8 @@ Write `poster_notes.md` with:
 ## When Using With DraftPilot
 
 If the paper is open in DraftPilot, keep the generated poster under the paper root at `poster/` so it can be edited, compiled, and reviewed beside the manuscript without cluttering source sections. Do not place generated posters inside DraftPilot app/source directories.
+
+DraftPilot-generated poster jobs copy the bundled `baposter.cls` and license/notice files into `poster/`. Use that local class file instead of assuming the user's TeX distribution has baposter installed system-wide.
 
 ## References
 
