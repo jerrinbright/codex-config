@@ -170,19 +170,38 @@ If skill not triggering:
 
 ## Available Skills
 
-- `code-review`: review code changes and write findings to `code_review.md`
-- `code-review-orchestration`: coordinate review and response loops
-- `code-review-response`: verify and address review feedback
-- `context-handoff`: create concise handoff/status files for Codex sessions
-- `data-pipeline-speed-optimizer`: optimize ML data prep, video/frame sampling, WES/crop prep, manifests, and Mongo/R2/file I/O
-- `html-video-viewer`: create static HTML video/result viewers, serve them with byte-range support, and provide pasteable file/tunnel links
-- `modal-speed-optimizer`: tune Modal GPU jobs, fanout, shard sizing, cold starts, volume I/O, and detached workload telemetry
-- `modal-spend`: summarize Modal spend by environment and app
-- `mongo-episode-query-discovery`: discover Mongo episode queries from project metadata, upstream-written episode fields, and requested output file keys
-- `neural-inference-optimizer`: optimize HF/Qwen/OWLv2/VLM inference with batching, caching, model-load, prompt, and heuristic checks
-- `neural-training-optimizer`: optimize neural training throughput, dataloaders, distributed execution, checkpointing, and convergence risk
-- `optimization-orchestrator`: coordinate profiling, specialist speed skills, controlled experiments, agents when explicitly requested, benchmarking, and cost/accuracy reporting
-- `paper-to-beamer`: turn LaTeX research papers into 10-minute conference Beamer decks with speaker notes
-- `session-recovery`: recover prior Codex sessions from repo/task/job context hints and return resume commands plus evidence
-- `split-stereo-hands-videos`: split stereo-hands `recording_primary.mp4` and `recording_secondary.mp4` into six corrected camera videos for `run_multi_camera_unified_v3.py`
-- `training-progress`: analyze ML training logs and progress
+### AI Research And ML
+
+- `ai-research-orchestrator`: use for broad model/data research loops: turn an idea into hypotheses, experiments, evals, synthesis, and follow-up. Trigger this when the goal is quality, strategy, or research direction rather than just speed.
+- `finetuning-orchestrator`: use for SFT, LoRA, PEFT, QLoRA, full fine-tuning, projector/bridge training, trainable-module choices, LR groups, dataset splits, and checkpoint lineage.
+- `posttraining-orchestrator`: use for DPO, SimPO, RLHF, GRPO, TRL/OpenRLHF/verl-style workflows, auditor corrections, chosen/rejected examples, reward data, and preference learning.
+- `model-evaluation`: use for comparing checkpoints or model outputs against GT/auditors: exact/similar/wrong, top-k, action/object buckets, agreement/overlap, gated verifier policies, and regression examples.
+- `prompt-structured-output`: use for JSON-only prompts, constrained outputs, tiny LLM extraction, Qwen noun/object parsing, schema validation, deterministic fallbacks, and prompt-output caching.
+- `mlops-experiment-tracking`: use when runs need durable lineage: config snapshots, checkpoint manifests, dataset versions, W&B/MLflow/TensorBoard/local summaries, and comparison tables.
+
+### Optimization And Training Ops
+
+- `optimization-orchestrator`: use for speed/cost optimization across a repo. It gathers telemetry first, routes to specialist optimizer skills, plans controlled configurations, and benchmarks cost/accuracy impact.
+- `modal-speed-optimizer`: use for Modal GPU jobs, detached apps, shard sizing, cold starts, empty shards, volume I/O, GPU selection, and cost/speed tradeoffs.
+- `neural-inference-optimizer`: use for HF/Qwen/OWLv2/VLM inference speed: model load, batching, processor/tokenizer overhead, prompt/object caching, top-k candidates, and inference heuristics.
+- `neural-training-optimizer`: use for training throughput: dataloaders, distributed strategy, frozen/trainable modules, checkpointing, validation cadence, mixed precision, and convergence-risk-aware speedups.
+- `data-pipeline-speed-optimizer`: use for ML data prep bottlenecks: video/frame sampling, WES/crop prep, manifests, R2/S3/Mongo/file I/O, JSONL shards, and packed/chunked storage decisions.
+- `training-progress`: use for active/completed training status: step/epoch progress, elapsed time, ETA, checkpoint health, train/validation curves, stalls, and run-risk summaries.
+- `modal-spend`: use for Modal cost questions: rolling spend, jerrin environment/app breakdowns, and spend spike investigation.
+
+### Data, Viewers, And Domain Utilities
+
+- `mongo-episode-query-discovery`: use for Mecka Mongo episode discovery: campaigns, projects, WES/body/video/trajectory outputs, `pipeline_results` paths, and reusable episode queries.
+- `html-video-viewer`: use to create local/tunnel HTML viewers for videos, segments, predictions, labels, confidence/top-k details, and model comparison artifacts.
+- `split-stereo-hands-videos`: use to split stereo-hands `recording_primary.mp4` and `recording_secondary.mp4` into six corrected camera videos for `run_multi_camera_unified_v3.py`.
+
+### Reviews, Handoffs, And Papers
+
+- `code-review`: use for code review findings focused on bugs, regressions, risks, and missing tests; writes `code_review.md`.
+- `code-review-orchestration`: use to coordinate review/response loops, delegated review, follow-up review, and approval/blocking decisions.
+- `code-review-response`: use to verify and address an existing review by fixing or defending each point against the actual code.
+- `context-handoff`: use to create concise handoff/status files for sessions, branches, agents, long-running jobs, or device/context transitions.
+- `session-recovery`: use to recover prior Codex sessions from repo/task/job context hints and return resume commands plus evidence.
+- `paper-template-starter`: use to create rough LaTeX research paper scaffolds or conference-paper starter workspaces.
+- `paper-to-beamer`: use to turn LaTeX research papers into conference Beamer decks with speaker notes.
+- `paper-to-poster`: use to turn papers or research material into scientific poster drafts.

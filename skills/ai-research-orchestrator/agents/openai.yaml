@@ -1,0 +1,5 @@
+interface:
+  display_name: "AI Research Orchestrator"
+  short_description: "Coordinate model research experiments."
+  default_prompt: "Turn this AI research goal into a measured experiment loop: gather evidence, route to specialist skills, run or plan controlled experiments, evaluate, and synthesize the next step."
+

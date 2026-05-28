@@ -1,0 +1,5 @@
+interface:
+  display_name: "Model Evaluation"
+  short_description: "Compare models against GT."
+  default_prompt: "Evaluate these model outputs against GT/auditor labels: compute exact/similar/wrong, top-k, error buckets, agreement/gating stats, and representative examples."
+

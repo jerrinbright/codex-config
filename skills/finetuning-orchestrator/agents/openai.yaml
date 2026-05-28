@@ -1,0 +1,5 @@
+interface:
+  display_name: "Finetuning Orchestrator"
+  short_description: "Design LoRA/PEFT/SFT runs."
+  default_prompt: "Design or review this fine-tuning run: choose LoRA/PEFT/full/projector strategy, dataset split, trainable modules, LR groups, eval cadence, and checkpoint metadata."
+

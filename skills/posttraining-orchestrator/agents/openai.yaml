@@ -1,0 +1,5 @@
+interface:
+  display_name: "Post-Training Orchestrator"
+  short_description: "Use preferences and corrections."
+  default_prompt: "Design a post-training workflow from corrections, preferences, rejected labels, or auditor feedback, choosing SFT/DPO/SimPO/RLHF/GRPO-style methods and validation."
+

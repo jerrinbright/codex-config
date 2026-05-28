@@ -1,0 +1,5 @@
+interface:
+  display_name: "Prompt Structured Output"
+  short_description: "Make prompts parseable and cached."
+  default_prompt: "Design or improve this structured-output prompt/parser with schema validation, caching, deterministic fallbacks, and eval metrics."
+

@@ -1,0 +1,5 @@
+interface:
+  display_name: "MLOps Experiment Tracking"
+  short_description: "Track run lineage and metrics."
+  default_prompt: "Set up or repair experiment tracking for this ML workflow: run metadata, config snapshots, checkpoint lineage, metrics, artifacts, and comparison tables."
+
