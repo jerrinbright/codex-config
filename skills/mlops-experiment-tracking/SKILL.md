@@ -12,6 +12,7 @@ Make model runs reproducible and comparable across training, inference, data pre
 This differs from `training-progress`: that skill answers current progress/ETA. This skill designs durable tracking and lineage.
 
 Read `references/tracking-systems.md` for W&B/MLflow/TensorBoard/local routing.
+Read `references/observability-and-regression.md` when the task involves production/model monitoring, LLM observability, traces, recurring evals, or regression gates.
 
 ## Workflow
 
@@ -32,6 +33,7 @@ Read `references/tracking-systems.md` for W&B/MLflow/TensorBoard/local routing.
    - use stable eval slices,
    - record metric definitions,
    - preserve denominators and skipped counts.
+   - keep regression gates separate from exploratory dashboards.
 
 ## Minimal Local Manifest
 
@@ -48,4 +50,3 @@ Read `references/tracking-systems.md` for W&B/MLflow/TensorBoard/local routing.
   "notes": ""
 }
 ```
-

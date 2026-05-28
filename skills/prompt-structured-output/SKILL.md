@@ -12,6 +12,7 @@ Make model outputs parseable, cached, and production-safe.
 Use this for Qwen noun extraction, JSON labels, candidate extraction, prompt tuning, `instructor`, `guidance`, `outlines`, DSPy-style prompt experiments, and deterministic parser fallbacks.
 
 Read `references/json-and-extraction.md` for strict JSON and noun/object extraction patterns.
+Read `references/prompt-evaluation.md` when comparing prompts, parsers, tiny models, or structured-output regressions.
 
 ## Workflow
 
@@ -40,10 +41,10 @@ Read `references/json-and-extraction.md` for strict JSON and noun/object extract
    - Field accuracy.
    - Hallucination rate.
    - Latency per unique input.
+   - Regression examples where the new prompt/parser worsens previously correct outputs.
 
 ## Safety
 
 - Do not trust LLM output without schema validation.
 - Avoid per-segment LLM calls when unique-string caching works.
 - Keep prompt versions explicit in output metadata.
-

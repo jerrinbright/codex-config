@@ -17,6 +17,7 @@ This is broader than `optimization-orchestrator`. Use `optimization-orchestrator
 - DPO/RLHF/GRPO/SimPO/auditor preference learning: `posttraining-orchestrator`.
 - Eval design, audit comparison, regression tables, model ranking: `model-evaluation`.
 - Prompt/JSON/parser/tiny LLM structured extraction: `prompt-structured-output`.
+- Literature review, research lookup, hypothesis generation, paper critique: `research-literature-synthesis`.
 - Run lineage, experiment tracking, W&B/MLflow/TensorBoard: `mlops-experiment-tracking`.
 - Speed/cost bottlenecks: `optimization-orchestrator`.
 - Training ETA/curves: `training-progress`.
@@ -37,6 +38,7 @@ Read `references/research-loop.md` when the task is multi-day, ambiguous, or nee
 2. **Map current evidence**
    - Existing runs, checkpoints, configs, datasets, eval HTML, logs, campaign ids, and known failure modes.
    - Separate measured facts from assumptions.
+   - If the question depends on outside research or fast-moving methods, route to `research-literature-synthesis` before designing experiments.
 
 3. **Design a small experiment set**
    - Prefer 2-4 experiments with clear deltas.
@@ -66,4 +68,3 @@ Read `references/research-loop.md` when the task is multi-day, ambiguous, or nee
 - Risks:
 - Next action:
 ```
-

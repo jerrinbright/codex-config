@@ -177,6 +177,7 @@ If skill not triggering:
 - `posttraining-orchestrator`: use for DPO, SimPO, RLHF, GRPO, TRL/OpenRLHF/verl-style workflows, auditor corrections, chosen/rejected examples, reward data, and preference learning.
 - `model-evaluation`: use for comparing checkpoints or model outputs against GT/auditors: exact/similar/wrong, top-k, action/object buckets, agreement/overlap, gated verifier policies, and regression examples.
 - `prompt-structured-output`: use for JSON-only prompts, constrained outputs, tiny LLM extraction, Qwen noun/object parsing, schema validation, deterministic fallbacks, and prompt-output caching.
+- `research-literature-synthesis`: use for literature reviews, paper lookup, state-of-the-art summaries, hypothesis generation, research-gap analysis, paper critique, and citation-backed technical decisions.
 - `mlops-experiment-tracking`: use when runs need durable lineage: config snapshots, checkpoint manifests, dataset versions, W&B/MLflow/TensorBoard/local summaries, and comparison tables.
 
 ### Optimization And Training Ops

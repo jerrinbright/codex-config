@@ -1,0 +1,5 @@
+interface:
+  display_name: "Research Literature Synthesis"
+  short_description: "Review papers and evidence."
+  default_prompt: "Search and synthesize research evidence for this AI/ML question, critique claims, identify gaps, and propose the smallest useful experiment."
+

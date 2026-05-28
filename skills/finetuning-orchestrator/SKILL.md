@@ -12,6 +12,7 @@ Choose and document a fine-tuning strategy that matches the model, dataset size,
 This differs from `neural-training-optimizer`: that skill improves throughput/cost. This skill decides what and how to fine-tune.
 
 Read `references/peft-frameworks.md` for PEFT/Axolotl/LLaMA-Factory/Unsloth routing.
+Read `references/data-quality-and-curation.md` when the run depends on filtering, deduplication, noisy labels, pseudo-labels, or curated golden/test sets.
 
 ## Workflow
 
@@ -20,6 +21,7 @@ Read `references/peft-frameworks.md` for PEFT/Axolotl/LLaMA-Factory/Unsloth rout
 
 2. **Inspect model and data**
    - Base checkpoint, current best checkpoint, trainable modules, dataset count, label quality, noisy/negative examples, heldout/test split.
+   - Verify whether labels are human GT, model-derived, auditor-corrected, or synthetic/noisy.
 
 3. **Choose method**
    - LoRA/PEFT for low-cost adaptation and fast iteration.
@@ -47,4 +49,3 @@ Read `references/peft-frameworks.md` for PEFT/Axolotl/LLaMA-Factory/Unsloth rout
 - Do not include test campaign data in training or validation.
 - Do not mix dataset versions without metadata.
 - Do not continue from a checkpoint unless the user or evidence confirms that is intended.
-

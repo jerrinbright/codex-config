@@ -10,6 +10,7 @@ description: "Evaluate and compare AI model outputs against ground truth, audito
 Produce trustworthy model comparisons with clear denominators, metrics, examples, and caveats.
 
 Read `references/audit-label-eval.md` for audit/campaign/object-label evaluation patterns.
+Read `references/statistical-comparison.md` when comparing models on small slices, paired outputs, A/B tests, or noisy metrics.
 
 ## Workflow
 
@@ -27,6 +28,7 @@ Read `references/audit-label-eval.md` for audit/campaign/object-label evaluation
    - Error buckets: wrong object, missing action, wrong action, color, secondary object/location, hallucination.
    - Agreement/overlap between model and verifier.
    - Gated policy coverage, salvage, false override, and net delta.
+   - Confidence intervals or paired deltas when sample size/risk warrants it.
 
 4. **Inspect examples**
    - Include representative wins, regressions, and ambiguous cases.
@@ -49,4 +51,3 @@ Read `references/audit-label-eval.md` for audit/campaign/object-label evaluation
 - Error buckets:
 - Caveats:
 ```
-
