@@ -174,10 +174,15 @@ If skill not triggering:
 - `code-review-orchestration`: coordinate review and response loops
 - `code-review-response`: verify and address review feedback
 - `context-handoff`: create concise handoff/status files for Codex sessions
+- `data-pipeline-speed-optimizer`: optimize ML data prep, video/frame sampling, WES/crop prep, manifests, and Mongo/R2/file I/O
 - `html-video-viewer`: create static HTML video/result viewers, serve them with byte-range support, and provide pasteable file/tunnel links
+- `modal-speed-optimizer`: tune Modal GPU jobs, fanout, shard sizing, cold starts, volume I/O, and detached workload telemetry
 - `modal-spend`: summarize Modal spend by environment and app
 - `mongo-episode-query-discovery`: discover Mongo episode queries from project metadata, upstream-written episode fields, and requested output file keys
-- `session-recovery`: recover prior Codex sessions from repo/task/job context hints and return resume commands plus evidence
+- `neural-inference-optimizer`: optimize HF/Qwen/OWLv2/VLM inference with batching, caching, model-load, prompt, and heuristic checks
+- `neural-training-optimizer`: optimize neural training throughput, dataloaders, distributed execution, checkpointing, and convergence risk
+- `optimization-orchestrator`: coordinate profiling, specialist speed skills, controlled experiments, agents when explicitly requested, benchmarking, and cost/accuracy reporting
 - `paper-to-beamer`: turn LaTeX research papers into 10-minute conference Beamer decks with speaker notes
+- `session-recovery`: recover prior Codex sessions from repo/task/job context hints and return resume commands plus evidence
 - `split-stereo-hands-videos`: split stereo-hands `recording_primary.mp4` and `recording_secondary.mp4` into six corrected camera videos for `run_multi_camera_unified_v3.py`
 - `training-progress`: analyze ML training logs and progress

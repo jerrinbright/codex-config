@@ -1,0 +1,5 @@
+interface:
+  display_name: "Neural Inference Optimizer"
+  short_description: "Speed up HF/Qwen/OWLv2 inference."
+  default_prompt: "Optimize this neural inference pipeline: profile model load, preprocessing, batching, forward pass, postprocessing, caching, and accuracy impact."
+

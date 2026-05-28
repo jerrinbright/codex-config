@@ -1,0 +1,5 @@
+interface:
+  display_name: "Data Pipeline Speed Optimizer"
+  short_description: "Speed up video/data prep pipelines."
+  default_prompt: "Optimize this ML data pipeline: profile Mongo/R2/video decode/frame sampling/crop prep, reduce duplicate work, and validate output correctness."
+

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Optimization Orchestrator"
+  short_description: "Profile, plan, and coordinate ML speedups."
+  default_prompt: "Optimize this repo or run for speed/cost: gather telemetry, identify bottlenecks, choose specialist optimization skills, implement controlled changes, and benchmark the result."
+

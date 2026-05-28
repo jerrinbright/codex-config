@@ -1,0 +1,5 @@
+interface:
+  display_name: "Neural Training Optimizer"
+  short_description: "Improve training throughput and cost."
+  default_prompt: "Analyze and optimize this neural training run for throughput, cost, checkpoint safety, dataloader health, and convergence risk."
+

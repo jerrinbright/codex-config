@@ -1,0 +1,5 @@
+interface:
+  display_name: "Modal Speed Optimizer"
+  short_description: "Tune Modal GPU jobs and fanout."
+  default_prompt: "Profile and optimize this Modal workload for speed and cost, focusing on shard sizing, cold starts, GPU use, volume I/O, and durable telemetry."
+
