@@ -9,6 +9,8 @@ description: "Optimize neural network training speed and cost: dataloaders, dist
 
 Improve training throughput and cost while protecting convergence and resume safety.
 
+Read `references/distributed-training.md` when the issue involves multi-GPU strategy, FSDP/DeepSpeed/Accelerate/Ray Train, dataloader scaling, or GPU underutilization. Read `references/quantization-distillation.md` when the proposed optimization changes model size, precision, distillation, pruning, or adapter strategy.
+
 ## Workflow
 
 1. **Read the training config/code**

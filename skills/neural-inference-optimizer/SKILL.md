@@ -9,6 +9,8 @@ description: "Optimize neural network inference pipelines, especially Hugging Fa
 
 Speed up inference while preserving output quality and evaluation comparability.
 
+Read `references/serving-and-batching.md` for deeper batching/model-residency/serving-stack patterns.
+
 ## Workflow
 
 1. **Establish baseline**

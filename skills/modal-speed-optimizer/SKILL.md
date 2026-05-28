@@ -9,6 +9,8 @@ description: "Optimize Modal-based ML workloads for speed and cost: GPU job fano
 
 Improve Modal job throughput and cost without changing model semantics.
 
+For deeper Modal patterns, read `references/modal-patterns.md` when the task involves large fanout, detached jobs, multiple GPU classes, volumes, app lifecycle, or cost/speed tradeoffs.
+
 ## Checklist
 
 1. **Inventory the run**
@@ -66,4 +68,3 @@ outputs
 accuracy/equivalence
 estimated_cost
 ```
-

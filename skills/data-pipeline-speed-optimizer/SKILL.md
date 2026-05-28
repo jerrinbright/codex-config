@@ -9,6 +9,8 @@ description: "Optimize ML data pipelines for speed and cost: video/frame samplin
 
 Speed up deterministic data prep so GPU training/inference is not starved or blocked.
 
+Read `references/data-engines.md` when considering Ray Data, Dask, Polars, Vaex, Zarr, or chunked/packed storage.
+
 ## Workflow
 
 1. **Map the data path**
@@ -52,4 +54,3 @@ Speed up deterministic data prep so GPU training/inference is not starved or blo
 - Persist normalized manifests and summary counts.
 - Use JSONL shards for parallel writes, then deterministic merge.
 - Separate train/validation/test exclusion before expensive prep.
-
