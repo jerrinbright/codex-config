@@ -15,6 +15,7 @@ Read `references/serving-and-batching.md` for deeper batching/model-residency/se
 
 1. **Establish baseline**
    - Model/checkpoint, device, dtype, batch size, input count, prompt/candidate count, image/frame count, wall time, accuracy/proxy metric.
+   - Record the baseline as a gate: target speedup, maximum memory, maximum cost, and allowed accuracy/equivalence delta.
 
 2. **Break down inference**
    - Model/tokenizer/processor load.
@@ -33,6 +34,8 @@ Read `references/serving-and-batching.md` for deeper batching/model-residency/se
    - Avoid repeated image opens when multiple prompts use the same image.
    - Move deterministic parsing outside GPU workers.
    - Use `torch.inference_mode()`, eval mode, pinned expected dtype/device.
+   - Reuse allocated tensors/buffers where practical and avoid repeated CPU/GPU transfers inside tight loops.
+   - Watch Python object churn in postprocessing; prefer vectorized tensor/array operations when the profiler points there.
 
 4. **Tune batch and shards together**
    - Larger batch reduces overhead but can increase memory and latency.
@@ -44,6 +47,12 @@ Read `references/serving-and-batching.md` for deeper batching/model-residency/se
    - If changing prompt extraction, top-k handling, crop policy, resize, thresholds, or heuristics, rerun the same eval slice.
    - Report exact, similar/synonym, top-1/top-3, agreement, and regression examples when available.
    - Quantization, pruning, and distillation need their own accuracy table before being accepted.
+   - Reject or gate changes that improve latency but cause >5% accuracy/equivalence regression unless the user explicitly accepts that tradeoff.
+
+6. **Detect regressions**
+   - Compare against the saved baseline for total wall time, model load, processor time, forward time, postprocess time, memory, and output quality.
+   - Treat a stage-level slowdown as useful evidence even when total wall time is noisy; it often exposes cold-start, batching, or I/O effects.
+   - If the candidate is close to the baseline, rerun the same slice and compare medians before drawing a conclusion.
 
 ## Object-Verifier Specific Guidance
 
@@ -74,4 +83,13 @@ agreement_rate
 coverage
 false_override_rate
 salvage_rate
+```
+
+## Benchmark Matrix
+
+Use this compact shape when reporting candidate configs:
+
+```md
+| Config | Batch | Shards | GPU | Wall | Load | Preprocess | Forward | Postprocess | Accuracy/equiv | Gate |
+|--------|------:|-------:|-----|-----:|-----:|-----------:|--------:|------------:|---------------:|------|
 ```

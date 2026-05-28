@@ -22,6 +22,7 @@ Read `references/distributed-training.md` when the issue involves multi-GPU stra
    - Dataloader wait/stall warnings.
    - Checkpoint/validation overhead.
    - Resume/checkpoint health.
+   - Record an explicit performance gate: target step-time improvement, max cost, max memory, quality/convergence proxy, and acceptable regression threshold.
 
 3. **Diagnose likely bottleneck**
    - GPU underutilized: dataloader, CPU decode, small batch, sync/logging, distributed imbalance.
@@ -38,6 +39,7 @@ Read `references/distributed-training.md` when the issue involves multi-GPU stra
    - Reduce validation frequency only when it does not hide regressions.
    - Keep metadata/config in checkpoint folders.
    - Consider distributed frameworks only when local patterns fit: Accelerate for simple PyTorch multi-GPU, DeepSpeed/FSDP for memory pressure and large models, Ray Train when data/distributed orchestration is the bottleneck.
+   - Check memory pressure before changing model strategy: activation checkpointing, batch sizing, host memory churn, pinned memory, and dataloader prefetch can matter more than model code.
 
 5. **LR and trainable-module strategy**
    - When training newly initialized adapters/bridges plus an already-trained LLM/projector, use parameter groups.
@@ -47,6 +49,11 @@ Read `references/distributed-training.md` when the issue involves multi-GPU stra
 6. **Model-changing optimizations**
    - Flash Attention, quantization, pruning, distillation, and speculative decoding can be valuable, but treat them as separate experiments with explicit quality checks.
    - For training speed, prefer dataloader/batch/distributed fixes before quantization-like changes unless memory is the blocker.
+
+7. **Regression checks**
+   - Compare candidate runs against the baseline for step time, examples/sec, GPU utilization, dataloader wait, checkpoint/validation overhead, memory, cost, and validation quality.
+   - Treat >5% step-time or cost regression, weaker resume behavior, or unexplained validation degradation as a failed gate unless the user explicitly chooses that tradeoff.
+   - Use the same data slice and checkpoint initialization for benchmark comparisons whenever possible.
 
 ## Report
 
@@ -58,3 +65,12 @@ Always separate:
 - Resume/checkpoint issue.
 
 Do not recommend broad training changes without evidence from logs or a small controlled run.
+
+## Benchmark Matrix
+
+Use this shape for training optimization comparisons:
+
+```md
+| Config | GPUs | Batch/global | Workers | Step time | Examples/sec | Dataloader wait | Memory | Val metric | Cost est. | Gate |
+|--------|-----:|-------------:|--------:|----------:|-------------:|----------------:|-------:|-----------:|----------:|------|
+```

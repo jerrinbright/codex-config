@@ -24,6 +24,7 @@ Read `references/data-engines.md` when considering Ray Data, Dask, Polars, Vaex,
    - Resize/crop/image write time.
    - JSON/manifest read/write/merge time.
    - Failed/skipped/retry counts.
+   - Keep the baseline in a comparable JSON/CSV/summary table with input count, output count, worker count, wall time, throughput, and failure rate.
 
 3. **Locality first**
    - Group work by video URI before decoding.
@@ -41,11 +42,18 @@ Read `references/data-engines.md` when considering Ray Data, Dask, Polars, Vaex,
    - Use enough workers for independent CPU/I/O work, but avoid overwhelming remote storage or creating tiny-task overhead.
    - For Modal, prefer sharded durable batches over one coordinator doing long serial scans.
    - Commit outputs in chunks.
+   - Treat worker count, shard size, chunk size, and batch-query size as a single config; increasing one without measuring the others can slow the pipeline.
 
 6. **Correctness checks**
    - Frame sampling changes must preserve timestamp semantics.
    - Crop/interpolation changes need visual samples.
    - Dataset splitting changes need counts, failed IDs, and excluded/test-set confirmation.
+   - Fail the optimization if a speedup silently drops rows, changes frame timestamps, leaks test-set data, or loses required bbox/crop metadata.
+
+7. **Regression checks**
+   - Compare candidates against the saved baseline for fetch, decode, crop/write, manifest merge, total wall time, throughput, and failure/skipped counts.
+   - Treat >5% slower throughput or any unexplained increase in failed/skipped items as a regression unless the user accepts the tradeoff.
+   - For remote storage noise, compare medians across repeated small slices before making a final call.
 
 ## Common Fixes
 
@@ -54,3 +62,12 @@ Read `references/data-engines.md` when considering Ray Data, Dask, Polars, Vaex,
 - Persist normalized manifests and summary counts.
 - Use JSONL shards for parallel writes, then deterministic merge.
 - Separate train/validation/test exclusion before expensive prep.
+
+## Benchmark Matrix
+
+Use this shape for reporting data-pipeline experiments:
+
+```md
+| Config | Workers | Shards | Inputs | Outputs | Failed | Fetch | Decode | Crop/write | Merge | Wall | Gate |
+|--------|--------:|-------:|-------:|--------:|-------:|------:|-------:|-----------:|------:|-----:|------|
+```

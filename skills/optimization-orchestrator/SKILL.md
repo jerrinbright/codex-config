@@ -38,11 +38,13 @@ The orchestration style is a lightweight version of a research loop: inner loop 
 1. **Scope**
    - Identify repo, command, workload, model/checkpoint, dataset slice, target metric, and what "faster" means.
    - Capture constraints: max cost, max GPUs, GPU type, target accuracy, target ETA, whether detached jobs are allowed.
+   - Define the performance gate before running experiments: minimum acceptable speedup, maximum tolerated cost, maximum allowed quality regression, and what slice proves the change.
 
 2. **Baseline**
    - Find the current single-entry command or script.
    - Run or inspect a small baseline with telemetry.
    - Record wall time, per-stage time, GPU type/count, shard count, batch size, input count, output count, accuracy/proxy metric, and cost estimate.
+   - Store the baseline in a comparable form so later runs can detect regressions mechanically.
 
 3. **Classify Bottleneck**
    - Modal/fanout/cold-start/volume issue: load `modal-speed-optimizer`.
@@ -64,6 +66,8 @@ The orchestration style is a lightweight version of a research loop: inner loop 
 6. **Benchmark**
    - Re-run the same slice as baseline.
    - Compare stage timings, total wall time, throughput, cost estimate, and output equivalence/accuracy.
+   - Apply the performance gate: pass/fail each target, not just the headline wall-time number.
+   - Flag regressions when any primary metric worsens by more than 5% unless the user set a different threshold.
    - If a change hurts correctness or cost, revert or disable it behind config.
    - Keep a short keep/discard decision for each experiment so later agents do not rediscover rejected configs.
 
@@ -101,6 +105,38 @@ cost_estimate
 ```
 
 Use JSON/JSONL/CSV when possible so later runs can be compared mechanically.
+
+## Target Gates
+
+Every optimization run should have explicit gates:
+
+```text
+speed_target
+cost_target
+quality_target
+regression_threshold
+baseline_run_id
+candidate_run_id
+gate_status
+```
+
+Use a compact benchmark matrix for comparisons:
+
+```md
+| Config | Wall time | Throughput | Cost est. | Accuracy/equivalence | Gate |
+|--------|----------:|-----------:|----------:|---------------------:|------|
+| baseline | | | | | |
+| candidate | | | | | |
+```
+
+Do not accept a candidate only because one stage got faster. The accepted config should improve the bottleneck while passing quality/equivalence and cost gates.
+
+## Regression Detection
+
+- Compare each candidate against the saved baseline for total wall time, key stage timings, throughput, cost, and accuracy/equivalence.
+- Treat >5% slowdown, >5% cost increase, or any unexplained accuracy drop as a regression unless the user explicitly chose that tradeoff.
+- For noisy cloud jobs, repeat a small benchmark or compare medians before rejecting a near-tie.
+- Keep rejected configs and reasons in the run summary so future optimization passes do not retry them blindly.
 
 ## Parallel Agent Pattern
 
