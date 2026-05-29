@@ -11,13 +11,15 @@ Turn a LaTeX research paper into a conference-ready Beamer deck and speaker-note
 
 ## Default Outputs
 
-Unless the user asks otherwise, create these files inside the paper workspace:
+Unless the user asks otherwise, create a simple `slides/` folder inside the paper workspace:
 
-- `presentation.tex`: Beamer source.
-- `presentation_notes.md`: slide-by-slide speaker notes with approximate timing.
-- `presentation_context.md`: extracted paper digest used to build the deck.
+- `slides/presentation.tex`: Beamer source.
+- `slides/presentation.pdf`: compiled deck, when validation succeeds.
+- `slides/presentation_notes.md`: slide-by-slide speaker notes with approximate timing.
 
 If a file already exists, write a non-conflicting filename such as `presentation_v2.tex`.
+Use extraction context and LaTeX build files as temporary artifacts. Do not keep `presentation_context.md`, `.aux`, `.log`, `.nav`, `.snm`, `.toc`, `.out`, `.fls`, or `.fdb_latexmk` unless the user asks for debugging artifacts.
+Do not write generated presentation files or LaTeX build artifacts directly into the paper root unless the user explicitly asks for that.
 
 ## Workflow
 
@@ -28,13 +30,19 @@ If a file already exists, write a non-conflicting filename such as `presentation
    - Fail loudly if `main.tex` cannot be found.
 
 2. Extract paper context before drafting.
+   - Create the default output directory first:
+
+```bash
+mkdir -p /path/to/paper/slides
+```
+
    - Run the bundled scanner:
 
 ```bash
-python3 <skill_dir>/scripts/extract_latex_paper_context.py /path/to/paper --main main.tex --out /path/to/paper/presentation_context.md
+python3 <skill_dir>/scripts/extract_latex_paper_context.py /path/to/paper --main main.tex --out /tmp/presentation_context.md
 ```
 
-   - Then read `presentation_context.md` plus the most relevant source sections directly.
+   - Then read the extracted context plus the most relevant source sections directly.
    - For SimGS-style projects, always inspect `abstract`, `intro`, `method`, `experiments`, `discussion`, `conclusion`, and supplementary files when present.
    - If the paper is on a VM or remote SSH host, copy the scanner to `/tmp` on that host and run it there so relative figure paths and included TeX files resolve correctly.
 
@@ -53,12 +61,20 @@ python3 <skill_dir>/scripts/extract_latex_paper_context.py /path/to/paper --main
    - Use a clean, portable Beamer theme such as `metropolis` only if available or already used; otherwise use default Beamer with restrained styling.
    - Include needed paper macros from the paper preamble when they are used in slide text.
    - Use relative paths for figures, usually the same paths used by the paper.
+   - Because the deck lives in `slides/`, add a paper-root search path such as `\graphicspath{{../}}` or rewrite figure paths so paper assets still resolve.
    - Keep slide text short: 3-5 bullets max, 7-10 words per bullet when possible.
    - Add speaker notes as `% Notes:` comments in `presentation.tex` and as fuller prose in `presentation_notes.md`.
 
 6. Validate.
-   - Run `latexmk -pdf -interaction=nonstopmode presentation.tex` if available.
+   - Run validation from the output folder:
+
+```bash
+cd /path/to/paper/slides
+latexmk -pdf -interaction=nonstopmode -file-line-error presentation.tex
+```
+
    - If `latexmk` is unavailable, try `pdflatex`.
+   - After a successful compile, clean temporary LaTeX build files with `latexmk -c presentation.tex` or remove only the generated scratch files. Keep `presentation.pdf`.
    - Fix compile errors caused by the generated deck.
    - Do not change the original paper unless the user explicitly asks.
 
@@ -102,7 +118,7 @@ The notes should help the presenter rehearse a 10-minute talk, not repeat slide 
 
 ## When Using With DraftPilot
 
-If the paper is open in DraftPilot, keep the generated deck in the same paper root so it can be edited, compiled, and reviewed beside the manuscript. Do not place generated slides inside DraftPilot app/source directories.
+If the paper is open in DraftPilot, keep the generated deck under the paper root at `slides/` so it can be edited, compiled, and reviewed beside the manuscript without cluttering source sections. Do not place generated slides inside DraftPilot app/source directories.
 
 ## References
 

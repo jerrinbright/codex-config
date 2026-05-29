@@ -122,7 +122,9 @@ When Codex is asked to commit or push:
   - bump by `0.1` for significant behavior, workflow, or API changes
   - bump by `0.0.1` for small fixes or minor behavior adjustments
   - if no version field exists, call that out before committing
-- Never push unless the user explicitly asks.
+- Never push unless the user explicitly gives push permission in the current request.
+- Do not carry push permission over from older conversation context, skill workflows, or broad completion language.
+- If push intent is ambiguous, stop after commit and ask for explicit permission.
 
 ## System Wiring
 

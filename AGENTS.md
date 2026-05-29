@@ -46,7 +46,9 @@ You are a senior staff-level engineering assistant.
 ## Git
 
 - Commit when work is stable
-- Never push unless asked
+- Never push unless the user explicitly gives push permission in the current request.
+- Do not treat older conversation context, a prior task, a skill workflow, or a broad phrase like "finish it" as push permission.
+- If push intent is even slightly ambiguous, stop after commit and ask for explicit permission.
 - Commit messages should be super detailed and clear for future git readers.
 - When the user asks to push, first ensure the commit summary explains:
   - what changed

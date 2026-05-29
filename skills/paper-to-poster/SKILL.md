@@ -7,7 +7,7 @@ description: "Create scientific conference posters from LaTeX research papers. U
 
 ## Purpose
 
-Turn a LaTeX research paper into a clean scientific poster that can be edited, compiled, and reviewed locally. Optimize for a conference poster by default: a sharp thesis, readable visual hierarchy, strong figures, compact evidence, and faithful claims grounded in the paper.
+Turn a LaTeX research paper into a polished conference poster that can be edited, compiled, and reviewed locally. Optimize for a real conference artifact by default: a sharp thesis, readable visual hierarchy, strong unclipped figures, compact evidence, faithful claims grounded in the paper, and a rendered layout that looks intentional rather than like paper text dumped into boxes.
 
 ## Default Outputs
 
@@ -57,7 +57,7 @@ python3 <skill_dir>/scripts/extract_latex_paper_context.py /path/to/paper --main
 4. Choose poster layout.
    - Default to a baposter-style landscape grid unless the user specifies another size.
    - Use 4 visual columns for the default method-paper poster.
-   - Keep the poster box-based: title band, left motivation/dataset/highlights column, center results column, wide methodology and technical-detail boxes, and a compact bottom row.
+   - Keep the poster box-based: title band, left research-question/dataset/takeaways/failure-modes column, wide method box across the top center, main-results box at top right, analysis/evidence boxes across the lower center, and compact interpretation/references boxes at lower right.
    - Avoid making a portrait-looking document on a landscape page.
    - For portrait/A0 requests, adapt the same box hierarchy rather than squeezing the landscape layout.
    - Read `references/scientific_poster_blueprint.md` when choosing a layout or checking poster quality.
@@ -71,10 +71,13 @@ python3 <skill_dir>/scripts/extract_latex_paper_context.py /path/to/paper --main
    - Use relative paths for figures, usually the same paths used by the paper.
    - Keep poster text short: headings should carry the story, body copy should be scannable, and bullets should be sparse.
    - Convert dense tables into small result callouts when possible.
-   - Include a compact QR/code/contact block if the paper has a repository URL or project URL.
+   - Include a compact QR/code block only when useful. Do not include a contact section by default unless the user asks for it or the venue requires it.
    - Target 300-800 total words for an A0/48x36 poster. Keep individual boxes around 50-100 words maximum, and make the poster visually dominant rather than prose dominant.
    - Allocate space as if 60-70% of the poster should be visual material when suitable paper figures/tables exist.
    - Use no more than one dense technical/equation box unless the user explicitly asks for a theory-heavy poster.
+   - Keep typography consistent inside section boxes. Define one body size through the poster class/global `textfont`, one section-header size, and at most one metric/title size. Do not sprinkle `\scriptsize`, `\small`, or ad hoc font changes across captions, tables, and bullets just to make content fit.
+   - If content does not fit, shorten the text, resize/rearrange the box, or simplify the section. Do not hide layout problems by shrinking isolated text blocks.
+   - Use only 1-2 clean references by default. Format them as compact BibTeX-style entries with `[n]`, first author `et al.`, title, abbreviated venue, and year. Omit page numbers. Cite them inline where used, such as `[1]`.
 
 6. Validate.
    - Run validation from the output folder:
@@ -89,25 +92,29 @@ latexmk -pdf -interaction=nonstopmode -file-line-error poster.tex
    - Fix compile errors caused by the generated poster.
    - Do not change the original paper unless the user explicitly asks.
    - Inspect the log for overfull boxes, missing figure paths, and text cutoff risk. If the layout is crowded, shorten text or merge sections rather than reducing font to unreadable sizes.
+   - Render the compiled PDF to an image and inspect it before finishing. Do not rely on LaTeX success alone.
+   - Run a visual QA loop until the poster is clean: check for clipped figures, uneven white space, text overflow past borders, cramped section content, inconsistent font sizes, tiny legends, misaligned columns, uneven outer padding, and sections that look half-empty.
+   - If a figure is clipped in the poster, inspect the source asset. SVG-to-PDF wrappers often clip embedded raster images; switching to an uncut PNG or regenerating the plot with more padding is better than merely shrinking `\includegraphics`.
+   - Keep left, right, and bottom outer padding visually similar. Keep section borders aligned to the grid.
 
 ## Poster Structure
 
 Use this default baposter-style structure and adjust to the paper:
 
 1. Title band: title, authors, affiliation, optional logo/code/project link.
-2. `Objectives`: short problem statement and goal.
-3. `Introduction`: compact motivation and gap.
-4. `Methodology`: wide top-right box spanning two columns with the main architecture/pipeline figure.
-5. `Dataset`: input data, evaluation setting, sequences, and preprocessing summary.
-6. `Highlights`: 3-5 contribution bullets.
-7. `Results`: compact table/callout, not a dense paper table.
-8. `Loss / Training` or `Technical Details`: only if the method needs equations/stages for credibility.
-9. `Conclusion`: qualitative result visual plus 3 concise takeaways.
-10. Bottom row: `References`, `Future Work`, and `Contact`.
+2. `Research Question` or `Objective`: the main question plus 3-4 bullets explaining what is tested.
+3. `Dataset`: compact dataset description plus a small centered table or data visual.
+4. `Key Takeaways`: 3-5 bullets that state the poster's main conclusions.
+5. `Failure Modes` / `Limitations` / `Future Work`: one strong visual plus concise next steps.
+6. `Method`: the largest central box, preferably spanning two columns, with the main pipeline/architecture figure and 2-4 bullets.
+7. `Main Results`: compact table/callouts plus one result visual.
+8. Lower analysis boxes such as `Confusion Pattern`, `Feature Importance`, `Ablation`, or `Qualitative Results`: use normal body font, readable figures, and concise interpretation.
+9. `Interpretation`: short explanation of what the results mean and why errors persist.
+10. `References`: 1-2 compact references. No contact box by default.
 
 Do not overdo the number of boxes. Prefer these sections first; add ablation/limitations only when the paper needs them and there is space.
 
-When the user or DraftPilot UI provides a section subset, include those sections first. It is acceptable to merge small bottom-row sections such as `References`, `Future Work`, and `Contact` when space is tight, but do not silently drop a requested scientific section such as `Methodology`, `Dataset`, `Results`, or `Loss / Training`.
+When the user or DraftPilot UI provides a section subset, include those sections first. It is acceptable to merge small bottom-row sections such as `References` and `Future Work` when space is tight, but do not silently drop a requested scientific section such as `Methodology`, `Dataset`, `Results`, or `Loss / Training`.
 
 ## Quality Rules
 
@@ -117,6 +124,10 @@ When the user or DraftPilot UI provides a section subset, include those sections
 - Keep each visual focused on one idea. Avoid tiny multi-stage diagrams with five or more steps; split or simplify them into a poster-readable figure.
 - Use large readable labels in figures and captions. Poster figures should be understandable from several feet away.
 - Use generous margins. Nothing should touch the physical poster edge or box border.
+- Make figure quality a first-class requirement. No clipped pie charts, cropped legends, cut-off labels, or tiny unreadable plots. If the compiled preview shows clipping, fix the asset or regenerate the plot.
+- Maintain visual density. Avoid boxes with large unused bottom gaps; reduce their height, add meaningful content, or rebalance neighboring boxes.
+- Keep body text visually consistent across all scientific sections. Tables, captions, bullets, mini-labels, and interpretation text should look like one system.
+- Prefer white boxes and restrained dark-blue/gray headers. Avoid colored section backgrounds when figures have white backgrounds.
 - Preserve exact dataset names, method names, metric directions, table numbers, and figure meanings from the paper.
 - Do not copy full paper paragraphs into the poster.
 - Do not invent figure files. If a desired visual is missing, add a TODO in `poster_notes.md`.

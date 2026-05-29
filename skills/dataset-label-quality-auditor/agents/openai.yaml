@@ -1,0 +1,3 @@
+display_name: Dataset Label Quality Auditor
+short_description: Audits segment/action labels for malformed text, separator drift, repeats, and training noise.
+default_prompt: Audit this label dataset for action-label quality issues and produce counts, examples, and cleanup recommendations.
