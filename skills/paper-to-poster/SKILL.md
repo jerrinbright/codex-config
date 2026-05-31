@@ -77,6 +77,8 @@ python3 <skill_dir>/scripts/extract_latex_paper_context.py /path/to/paper --main
    - Use no more than one dense technical/equation box unless the user explicitly asks for a theory-heavy poster.
    - Keep typography consistent inside section boxes. Define one body size through the poster class/global `textfont`, one section-header size, and at most one metric/title size. Do not sprinkle `\scriptsize`, `\small`, or ad hoc font changes across captions, tables, and bullets just to make content fit.
    - If content does not fit, shorten the text, resize/rearrange the box, or simplify the section. Do not hide layout problems by shrinking isolated text blocks.
+   - Add editable header controls in the poster preamble so title placement can be tuned without editing the class: `\posterHeaderHeight`, `\posterTitleBoxXShift`, `\posterTitleBoxYShift`, `\posterTitleBoxWidth`, `\posterTitleBoxHeight`, and `\posterTitleFontScale`. Use `headerheight=\posterHeaderHeight` in the poster options.
+   - The bundled `baposter.cls` supports those header controls and redraws each section tab above box contents; use the bundled/local class when possible so images cannot cover section headings.
    - Use only 1-2 clean references by default. Format them as compact BibTeX-style entries with `[n]`, first author `et al.`, title, abbreviated venue, and year. Omit page numbers. Cite them inline where used, such as `[1]`.
 
 6. Validate.
