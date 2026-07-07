@@ -14,8 +14,11 @@ training, checkpoint repair, and heldout-20 eval/viewer work.
 1. Identify the task stage: data transfer, segment split, precompute, training,
    checkpoint/merge, inference, or viewer.
 2. Read the relevant repo docs before editing or launching:
+   - `docs/repo-map.md`
+   - `docs/run-catalog.md`
    - `docs/data-training-flow.md`
    - `docs/run-presets.md`
+   - `docs/contracts/`
    - `docs/hsdp-troubleshooting-faq.md`
    - `docs/heldout20-eval.md`
    - `docs/run-cards/`
@@ -28,8 +31,10 @@ training, checkpoint repair, and heldout-20 eval/viewer work.
 6. For HSDP or preset launches, preserve `run_metadata.json`; it is the bridge
    from training crop policy to heldout-20 eval/viewer.
 7. For heldout-20 inference, read `references/eval.md`, use
-   `MOLMO_RUN_METADATA_PATH` when available, and ensure the inference command
-   consumes metadata-provided annotation/cache env vars.
+   `MOLMO_RUN_METADATA_PATH` when available, and prefer
+   `runs/infer_holdout20.py` / `eval.holdout20_inference` so inference consumes
+   metadata-provided annotation/cache env vars and precomputed tar/member
+   fields.
 
 ## References
 
