@@ -5,6 +5,7 @@ Use repo wrappers:
 ```bash
 python precompute/naruto543_blurpad.py --dry-run
 python precompute/holdout20_squarepad.py --dry-run
+python precompute/run_precompute.py precompute.naruto543_blurpad --dry-run
 ```
 
 Crop policies:

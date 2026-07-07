@@ -13,6 +13,20 @@ CAMPAIGN_TOP6_VIEWER_APP_NAME=campaign6a15-top6-ckpt-compare-viewer \
 modal run --detach -e jerrin modal/scripts/eval/serve_campaign_top6_ckpt_compare_viewer.py
 ```
 
+Use the staged compare wrapper for new checkpoint spot-checks:
+
+```bash
+python runs/eval_holdout20_compare.py --dry-run
+```
+
+The wrapper runs `precompute`, `inference`, `append`, and `serve` stages. Until
+the remaining one-off inference/append scripts are fully consolidated, configure:
+
+```bash
+MOLMO_HOLDOUT20_INFERENCE_CMD='<modal inference command>'
+MOLMO_HOLDOUT20_APPEND_CMD='<local append command>'
+```
+
 Before running inference:
 
 1. Confirm the checkpoint path points at a merged HSDP checkpoint, usually

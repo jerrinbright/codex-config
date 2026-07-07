@@ -5,7 +5,11 @@ Use the repo presets first:
 ```bash
 python runs/train_labeler_blurpad_hsdp_2x8h200.py --dry-run
 python runs/train_corrector_original_blurpad_hsdp_2x8h200.py --dry-run
+python runs/run_preset.py train.labeler_blurpad_hsdp_2x8h200 --dry-run
 ```
+
+The preset source of truth is `runs/registry.py`; thin wrapper scripts should
+delegate to registry names.
 
 Expected healthy 2x8 H200 shape:
 

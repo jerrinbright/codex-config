@@ -18,6 +18,7 @@ training, checkpoint repair, and heldout-20 eval/viewer work.
    - `docs/run-presets.md`
    - `docs/hsdp-troubleshooting-faq.md`
    - `docs/heldout20-eval.md`
+   - `docs/run-cards/`
 3. Prefer the reviewed wrappers in `runs/` and `precompute/` over ad hoc
    command construction.
 4. Before launching any Modal job, show the command and confirm the user wants
