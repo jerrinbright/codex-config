@@ -1,0 +1,3 @@
+interface:
+  display_name: "Molmo Training Ops"
+  short_description: "Operate Molmo Modal data, precompute, HSDP training, checkpoint, and heldout eval workflows."
