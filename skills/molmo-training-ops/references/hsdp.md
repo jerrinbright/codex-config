@@ -37,3 +37,17 @@ Checkpoint expectations:
 - per-node exports under `<run_root>/local_checkpoint_exports/node*`
 - merged checkpoints under `<run_root>/merged_checkpoints`
 - merge wait timeout at least `10800` seconds for long HSDP runs
+
+Metadata expectations:
+
+- HSDP runs write `<run_root>/run_metadata.json` before training starts.
+- Preserve `model_key`, `model_label`, `task_type`, `prompt_mode`, and
+  `input_policy` fields; heldout-20 eval uses them to pick the matching cache.
+- Presets should set `MOLMO_TRAIN_INPUT_POLICY_KEY` and
+  `MOLMO_TRAIN_CROP_ASPECT_MODE` explicitly for non-crop-prior data.
+- To inspect the metadata without launching:
+
+```bash
+python runs/write_run_metadata.py train.labeler_blurpad_hsdp_2x8h200 \
+  --output /tmp/run_metadata.json
+```

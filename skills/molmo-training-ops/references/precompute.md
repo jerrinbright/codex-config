@@ -4,7 +4,9 @@ Use repo wrappers:
 
 ```bash
 python precompute/naruto543_blurpad.py --dry-run
+python precompute/holdout20_blurpad.py --dry-run
 python precompute/holdout20_squarepad.py --dry-run
+python precompute/holdout20_expand_square_edge.py --dry-run
 python precompute/run_precompute.py precompute.naruto543_blurpad --dry-run
 ```
 
@@ -16,6 +18,16 @@ Crop policies:
 - `expand_square_blur`: expand saved box toward square with real frame context,
   then use blurred context for unavoidable padding. This is the recommended
   current policy.
+
+Heldout-20 policy keys:
+
+- `campaign6a15_crop_prior_yolo_f96_fps8`
+- `campaign6a15_squarepad_yolo_f96_fps8`
+- `campaign6a15_expand_square_edge_yolo_f96_fps8`
+- `campaign6a15_blurpad_yolo_f96_fps8`
+
+Use the policy key from `run_metadata.json` instead of picking a holdout cache
+by hand when possible.
 
 Before combine:
 

@@ -25,10 +25,14 @@ training, checkpoint repair, and heldout-20 eval/viewer work.
    the job started unless the current user request explicitly asks to start it.
 5. For HSDP, verify compile-off args, precomputed data paths, perf gates, and
    local checkpoint/export settings before launch.
-6. For heldout-20 inference, ensure the eval crop policy matches training.
+6. For HSDP or preset launches, preserve `run_metadata.json`; it is the bridge
+   from training crop policy to heldout-20 eval/viewer.
+7. For heldout-20 inference, read `references/eval.md`, use
+   `MOLMO_RUN_METADATA_PATH` when available, and ensure the inference command
+   consumes metadata-provided annotation/cache env vars.
 
 ## References
 
 - `references/hsdp.md`: HSDP launch and troubleshooting checklist.
 - `references/precompute.md`: crop policy and precompute checklist.
-- `references/eval.md`: heldout-20 eval/viewer checklist.
+- `references/eval.md`: metadata-driven heldout-20 eval/viewer checklist.
