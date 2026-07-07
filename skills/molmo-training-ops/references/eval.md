@@ -73,8 +73,12 @@ CAMPAIGN_TOP6_VIEWER_APP_NAME=campaign6a15-top6-ckpt-compare-viewer \
 modal run --detach -e jerrin modal/scripts/eval/serve_campaign_top6_ckpt_compare_viewer.py
 ```
 
-Default repo smoke tests should run through Docker:
+Default repo smoke tests should run through Modal:
 
 ```bash
 python runs/smoke_tests.py
 ```
+
+The wrapper calls `modal run -e jerrin
+modal/scripts/util/smoke_molmo_docker_runtime.py`, which builds the Dockerfile
+smoke stage remotely and runs the standard dry-run and focused pytest checks.

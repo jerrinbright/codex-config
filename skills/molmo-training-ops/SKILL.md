@@ -24,8 +24,9 @@ training, checkpoint repair, and heldout-20 eval/viewer work.
    - `docs/run-cards/`
 3. Prefer the reviewed wrappers in `runs/` and `precompute/` over ad hoc
    command construction.
-4. For smoke tests, prefer `python runs/smoke_tests.py`; it uses the
-   Docker-backed Molmo runtime instead of workstation Python.
+4. For smoke tests, prefer `python runs/smoke_tests.py`; it launches the
+   Modal-backed Docker smoke runtime instead of workstation Python or local
+   Docker.
 5. Before launching any Modal job, show the command and confirm the user wants
    the job started unless the current user request explicitly asks to start it.
 6. For HSDP, verify compile-off args, precomputed data paths, perf gates, and
