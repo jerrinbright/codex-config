@@ -24,13 +24,15 @@ training, checkpoint repair, and heldout-20 eval/viewer work.
    - `docs/run-cards/`
 3. Prefer the reviewed wrappers in `runs/` and `precompute/` over ad hoc
    command construction.
-4. Before launching any Modal job, show the command and confirm the user wants
+4. For smoke tests, prefer `python runs/smoke_tests.py`; it uses the
+   Docker-backed Molmo runtime instead of workstation Python.
+5. Before launching any Modal job, show the command and confirm the user wants
    the job started unless the current user request explicitly asks to start it.
-5. For HSDP, verify compile-off args, precomputed data paths, perf gates, and
+6. For HSDP, verify compile-off args, precomputed data paths, perf gates, and
    local checkpoint/export settings before launch.
-6. For HSDP or preset launches, preserve `run_metadata.json`; it is the bridge
+7. For HSDP or preset launches, preserve `run_metadata.json`; it is the bridge
    from training crop policy to heldout-20 eval/viewer.
-7. For heldout-20 inference, read `references/eval.md`, use
+8. For heldout-20 inference, read `references/eval.md`, use
    `MOLMO_RUN_METADATA_PATH` when available, and prefer
    `runs/infer_holdout20.py` / `eval.holdout20_inference` so inference consumes
    metadata-provided annotation/cache env vars and precomputed tar/member

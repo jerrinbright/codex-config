@@ -24,7 +24,6 @@ Preferred flow is metadata-driven. If the run has
 
 ```bash
 MOLMO_RUN_METADATA_PATH=/ckpt_vol/runs/molmo2/<run>/run_metadata.json \
-MOLMO_HOLDOUT20_INFERENCE_CMD='<modal inference command>'
 python runs/eval_holdout20_compare.py --dry-run
 ```
 
@@ -32,14 +31,17 @@ The wrapper runs `precompute`, `inference`, `append`, and `serve` stages.
 Metadata supplies the default model id/label, checkpoint step, crop policy,
 heldout annotations path, heldout input root, results path, and viewer note.
 
-Until checkpoint-specific inference scripts are fully consolidated, configure
-only `MOLMO_HOLDOUT20_INFERENCE_CMD`. The injected command should read:
+The standard inference path is `runs/infer_holdout20.py`, which calls
+`modal/scripts/eval/infer_campaign_holdout20.py`. It should read:
 
 - `MOLMO_HOLDOUT20_ANNOTATIONS_PATH`
 - `MOLMO_HOLDOUT20_INPUT_ROOT`
 - `MOLMO_HOLDOUT20_NATIVE_CKPT`
 - `MOLMO_HOLDOUT20_RESULTS_PATH`
 - `MOLMO_HOLDOUT20_PREDICTION_KEY`
+
+Set `MOLMO_HOLDOUT20_INFERENCE_CMD` only when a custom model family cannot use
+the standard inference runner.
 
 Before running inference:
 
@@ -69,4 +71,10 @@ Serve the standard Modal viewer:
 ```bash
 CAMPAIGN_TOP6_VIEWER_APP_NAME=campaign6a15-top6-ckpt-compare-viewer \
 modal run --detach -e jerrin modal/scripts/eval/serve_campaign_top6_ckpt_compare_viewer.py
+```
+
+Default repo smoke tests should run through Docker:
+
+```bash
+python runs/smoke_tests.py
 ```
