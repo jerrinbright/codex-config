@@ -35,6 +35,7 @@ Use these when the goal is faster runtime, lower Modal spend, better GPU utiliza
 
 | Skill | Use When |
 |-------|----------|
+| `paul-optimizer` | Verifier-first swarm optimization for CV/ML Python services. Use when speed work should first create a verifier sub-agent, then spawn specialized optimizer sub-agents across Paul-style search spaces: concurrency, resident hosts, video/I/O, GPU runtime, native C++/CUDA/TensorRT, and algorithmic workload reduction. |
 | `optimization-orchestrator` | Coordinating speed/cost optimization across a repo. It gathers telemetry, routes to specialist optimizer skills, defines target gates, benchmarks configs, and checks regressions. |
 | `modal-speed-optimizer` | Modal GPU jobs, detached apps, shard sizing, cold starts, empty shards, volume I/O, GPU selection, retries, and cost/speed tradeoffs. |
 | `neural-inference-optimizer` | Hugging Face, Qwen, OWLv2, VLM inference speed: model load, batching, processor/tokenizer overhead, prompt/object caching, top-k candidates, and heuristics. |
@@ -77,11 +78,11 @@ Use these for paper, poster, and talk scaffolding.
 
 ### Optimize A Slow ML Repo
 
-1. Trigger `optimization-orchestrator`.
-2. It defines baseline telemetry and target gates.
-3. It routes to `modal-speed-optimizer`, `neural-inference-optimizer`, `neural-training-optimizer`, or `data-pipeline-speed-optimizer`.
-4. It benchmarks candidate configs against baseline speed, cost, and quality.
-5. It reports accepted/rejected configs with remaining bottlenecks.
+1. Trigger `paul-optimizer` for serious CV/ML service speed campaigns where parallel agents should explore multiple search spaces.
+2. It first creates a verifier sub-agent that defines correctness, quality, throughput, determinism, failure, and artifact gates.
+3. It then spawns specialized optimizer sub-agents for concurrency/MPS, resident execution, video/I/O, GPU runtime, native C++/CUDA/TensorRT, and algorithmic workload reduction.
+4. It accepts candidates only after the verifier certifies them on comparable hardware.
+5. For smaller single-agent optimization work, trigger `optimization-orchestrator`.
 
 ### Plan A Fine-Tuning Run
 
