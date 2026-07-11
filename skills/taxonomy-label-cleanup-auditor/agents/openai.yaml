@@ -1,0 +1,4 @@
+display_name: Taxonomy Label Cleanup Auditor
+short_description: Audits action-label and verb/noun taxonomy artifacts for typos, residual words, and bad auxiliary target leakage.
+default_prompt: Audit this label dataset or taxonomy output for spelling drift, off-taxonomy labels, noun/descriptor leakage, punctuation leakage, and safe cleanup recommendations.
+
