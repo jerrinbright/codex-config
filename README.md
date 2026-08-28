@@ -50,7 +50,7 @@ Use these when the task is about Mecka data discovery, episode paths, video prep
 
 | Skill | Use When |
 |-------|----------|
-| `mongo-episode-query-discovery` | Discovering/querying Mecka episodes, campaigns, projects, WES/body/video/trajectory outputs, `pipeline_results` paths, and reusable Mongo queries. |
+| `mongo-episode-query-discovery` | Discovering/querying Mecka episodes, campaigns, projects, WES/body/video/trajectory outputs, delivery and embedding coverage, reusable Mongo/ClickHouse queries, covering-index performance, and BSON-type correctness. |
 | `split-stereo-hands-videos` | Splitting stereo-hands `recording_primary.mp4` and `recording_secondary.mp4` into six corrected camera videos for `run_multi_camera_unified_v3.py`. |
 
 ### Code Review, Handoffs, And Session Recovery

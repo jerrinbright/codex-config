@@ -1,19 +1,23 @@
 ---
 name: mongo-episode-query-discovery
-description: Discover and construct MongoDB queries for Mecka episode data. Use when the user asks how to find/query episodes, projects, UMI, mono, multicam, Basalt, HLOC, hands, body, video, trajectory, or other output files in Mongo; when the user has a known episode id and wants the reusable query; or when the user has no episode id and needs to start from project metadata and upstream-written pipeline fields.
+description: Discover and construct correct, efficient MongoDB and ClickHouse queries for Mecka episode data. Use when the user asks how to find/query episodes, projects, UMI, mono, multicam, Basalt, HLOC, hands, body, video, trajectory, delivery, annotations, embeddings, or other outputs; when BSON type or index choice may cause slow or silently empty results; or when a known episode id must be resolved to reusable query fields.
 ---
 
 # Mongo Episode Query Discovery
 
 ## Core Rule
 
-Anchor broad `episodes` queries with an indexed selector before adding semantic or file-existence filters. Prefer:
+Anchor broad `episodes` queries with an indexed selector before adding semantic or file-existence filters. Pass an explicit index `hint` for bulk queries after checking `index_information()`. Prefer:
 
 ```js
 { projectId: ObjectId("..."), ...requested_field_filters }
 ```
 
 Avoid starting with unindexed fields such as `isUmi`, nested `pipeline_results.*`, or `$exists` across all episodes.
+
+For a known episode id, cast the hex string to `ObjectId`, query by `_id`, and explicitly hint `_id_`. Do not pass a string where the stored field is an `ObjectId`; MongoDB can return a confident zero rather than an error.
+
+For aggregates, aggregate on the server and return only the result. Do not stream documents to the client to count or sum them.
 
 ## Workflow
 
@@ -47,8 +51,11 @@ Avoid starting with unindexed fields such as `isUmi`, nested `pipeline_results.*
    - Explain that the projection only controls returned fields and keeps output small.
 
 7. Validate performance shape.
-   - Mention whether the query is anchored by indexed `projectId` or `_id`.
+   - Mention whether the query is anchored by indexed `projectId` or `_id`, and state the chosen hint for bulk work.
+   - Use a covering index when the requested filter, grouping, and aggregate fields permit it.
+   - For index-only queries, explicitly project `{ _id: 0 }` unless `_id` is part of the selected index or is the requested output.
    - If the user needs repeated large queries, recommend a compound index on the project and requested pipeline status/file key.
+   - Validate a representative shard before fanout, cache expensive id rosters, and report rows or episodes per second. If a bulk run is unexpectedly below roughly 8,000 episodes/s, stop and inspect the plan rather than waiting blindly.
 
 ## Mono Pipeline Discovery
 
@@ -91,10 +98,10 @@ If the nested `$exists` sample is slow, ask for a known episode or sample projec
 
 ## Query Patterns
 
-Use this shape for one known episode:
+Use this shape for one known episode. `find()` is intentional because it exposes `hint()` in a reusable shell example:
 
 ```js
-db.episodes.findOne(
+db.episodes.find(
   { _id: ObjectId("EPISODE_ID") },
   {
     projectId: 1,
@@ -107,7 +114,7 @@ db.episodes.findOne(
     video_1_h264_480p_r2: 1,
     pipeline_results: 1
   }
-)
+).hint("_id_").limit(1)
 ```
 
 Use this shape to discover project ids:
@@ -148,6 +155,8 @@ Default file-ready projections should include only `_id`, the requested video/fi
 ## Field Heuristics
 
 Read [episode-query-fields.md](references/episode-query-fields.md) when the user asks about known Mecka project ids, UMI, mono/HLOC, common video fields, or output file keys.
+
+Read [query-performance.md](references/query-performance.md) before bulk exports, aggregates, delivery checks, annotation/embedding coverage queries, ClickHouse work, or any query where BSON type, covering-index behavior, or a silent zero could affect correctness.
 
 ## Communication
 
