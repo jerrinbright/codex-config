@@ -28,6 +28,7 @@ Use these when judging whether a model, run, or experiment is actually better.
 | `mlops-experiment-tracking` | Keeping durable lineage: run metadata, config snapshots, checkpoint manifests, dataset versions, W&B/MLflow/TensorBoard/local summaries, and comparison tables. |
 | `training-progress` | Reading active or completed training status: steps, ETA, checkpoint health, train/validation curves, stalls, and run-risk summaries. |
 | `html-video-viewer` | Creating local/tunnel HTML viewers for videos, segments, predictions, labels, confidence/top-k details, and model comparisons. |
+| `generate-label-audit-html` | Building portable audit viewers with exact segment playback, A/B comparison decisions, pinned captions, structured rejection reasons, local persistence, and CSV export. |
 
 ### Speed, Cost, And Modal Ops
 

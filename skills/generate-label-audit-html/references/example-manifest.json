@@ -1,0 +1,55 @@
+{
+  "title": "Example blinded label audit",
+  "client": "example-project",
+  "delivery_date": "2026-08-12",
+  "rows": [
+    {
+      "source_episode_id": "episode-001",
+      "variant": "model-a",
+      "user_task_id": "user-task-01",
+      "task_id": "prepare a drink",
+      "description": "Kitchen activity",
+      "video_url": "https://example.com/episode-001.mp4",
+      "segments": [
+        {
+          "index": 0,
+          "start": 0.0,
+          "end": 2.5,
+          "label": "pick up mug with right hand",
+          "confidence": 0.91
+        },
+        {
+          "index": 1,
+          "start": 2.5,
+          "end": 5.0,
+          "label": "place mug on counter with right hand",
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "source_episode_id": "episode-001",
+      "variant": "model-b",
+      "user_task_id": "user-task-01",
+      "task_id": "prepare a drink",
+      "description": "Kitchen activity",
+      "video_url": "https://example.com/episode-001.mp4",
+      "segments": [
+        {
+          "index": 0,
+          "start": 0.0,
+          "end": 2.5,
+          "label": "hold mug with right hand",
+          "confidence": null
+        },
+        {
+          "index": 1,
+          "start": 2.5,
+          "end": 5.0,
+          "label": "set mug down with right hand",
+          "confidence": null
+        }
+      ]
+    }
+  ]
+}

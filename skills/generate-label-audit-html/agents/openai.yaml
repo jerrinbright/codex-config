@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate Label Audit HTML"
+  short_description: "Build blinded video label audit viewers"
+  default_prompt: "Use $generate-label-audit-html to build a portable blinded video label audit with rejection reasons and CSV export."

@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit</title>
+<style>
+  :root {
+    --bg: #FFFFFF; --text: #202020; --text-muted: #666666; --text-faint: #8F8F8F;
+    --border: #eaeaea; --chip-bg: #f5f5f5;
+    --accent: #ff7700; --accent-soft: rgba(255,119,0,0.8); --accent-tip: rgba(255,119,0,0.9);
+    --ok: #1a8f3c; --ok-soft: rgba(26,143,60,0.12); --no: #c0392b; --no-soft: rgba(192,57,43,0.10);
+  }
+  html, body { overflow-x: hidden; max-width: 100%; }
+  body { background: var(--bg); color: var(--text); font-weight: 300; line-height: 1.5;
+         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         padding: 0 40px; margin: 0; }
+  .num, .seg-table td, .seg-table th { font-variant-numeric: tabular-nums; }
+  ::selection { background: var(--accent-soft); color: #fff; }
+
+  .title { display: block; font-size: 42px; font-weight: 600; padding-top: 50px; margin-bottom: -4px; line-height: 1.1; }
+  .cover-date { font-size: 14px; color: var(--text-muted); margin-top: 8px; }
+  .cover-stats { display: flex; flex-wrap: wrap; align-items: center; margin: 28px 0 8px; padding: 16px 0;
+                 border-top: 1.5px solid var(--text); border-bottom: 1px solid var(--border); }
+  .stat { padding-right: 36px; min-width: 0; }
+  .stat-label { font-size: 11px; font-style: italic; color: var(--text-faint); margin-bottom: 4px; }
+  .stat-value { font-size: 22px; font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat-value.ok { color: var(--ok); } .stat-value.no { color: var(--no); }
+  .cover-meta { font-size: 12px; color: var(--text-faint); font-style: italic; margin-top: 6px; }
+  .kbd-hint { font-size: 11px; color: var(--text-faint); margin-top: 6px; }
+  .kbd-hint b { color: var(--text-muted); font-weight: 600; }
+  .export-wrap { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .btn { font: inherit; font-size: 13px; font-weight: 500; cursor: pointer; padding: 9px 16px;
+         border: 1px solid var(--accent); background: var(--accent); color: #fff; border-radius: 0;
+         transition: opacity .2s; }
+  .btn:hover { opacity: .85; }
+  .btn.ghost { background: var(--bg); color: var(--text); border-color: var(--border); }
+
+  .layout { display: grid; grid-template-columns: 300px 1fr; gap: 28px; margin-top: 20px; }
+  .sidebar { border-right: 1px solid var(--border); padding-right: 20px;
+             position: sticky; top: 0; max-height: 100vh; overflow-y: auto; align-self: start; }
+  .filters { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;
+             position: sticky; top: 0; background: var(--bg); padding: 12px 0 8px; z-index: 1; }
+  .filters input, .filters select { background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); padding: 6px 10px; font: inherit; font-weight: 300; font-size: 14px; border-radius: 0; }
+  .filters input:focus, .filters select:focus { outline: none; border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent); }
+
+  .ep-row { padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer;
+            display: flex; flex-direction: column; gap: 3px; }
+  .ep-row:hover { background: var(--chip-bg); }
+  .ep-row.active { background: var(--chip-bg); border-left: 2px solid var(--accent); padding-left: 8px; }
+  .ep-row.done { border-left: 2px solid var(--ok); padding-left: 8px; }
+  .ep-row .id { font-size: 12px; color: var(--text-faint); font-variant-numeric: tabular-nums; }
+  .ep-row .stats { font-size: 12px; color: var(--text-muted); display: flex; gap: 8px; }
+  .ep-row .prog { font-size: 11px; color: var(--text-faint); }
+  .ep-row .prog.full { color: var(--ok); }
+
+  .main { min-width: 0; align-self: start; position: sticky; top: 0;
+          height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+  .viewer-sticky { flex: none; background: var(--bg); padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .video-wrap { position: relative; background: var(--chip-bg); width: 100%; max-width: 1100px; }
+  .video-wrap video { display: block; width: 100%; height: auto; max-height: 42vh; }
+  .video-wrap .placeholder { padding: 40px; text-align: center; color: var(--text-faint); font-size: 12px; }
+  .vsub { position: absolute; left: 50%; bottom: 44px; transform: translateX(-50%);
+    max-width: 86%; box-sizing: border-box; background: rgba(0,0,0,0.66);
+    padding: 4px 13px 8px; text-align: center; border-radius: 2px; pointer-events: none; overflow: hidden; }
+  .vsub.hidden { display: none; }
+  .vsub.pos-top { top: 10px; bottom: auto; }
+  .vsub.pos-off { display: none !important; }
+  .cap-btn { position: absolute; top: 8px; right: 8px; z-index: 6; font: inherit; font-size: 11px;
+    font-weight: 500; cursor: pointer; padding: 4px 9px; border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(0,0,0,0.55); color: #fff; border-radius: 2px; pointer-events: auto;
+    font-variant-numeric: tabular-nums; transition: background .15s, border-color .15s; }
+  .cap-btn:hover { background: rgba(0,0,0,0.82); border-color: var(--accent); }
+  .vsub-text { color: #fff; font-size: 22px; line-height: 1.4; font-weight: 400; }
+  .vsub-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,0.15); }
+  .vsub-fill { height: 100%; width: 0%; background: var(--accent); }
+  .ep-desc { flex: none; font-size: 14px; line-height: 1.5; max-width: 1100px; margin: 6px 0 2px; }
+  .ep-meta { flex: none; display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 12px 0 4px; font-size: 13px; max-width: 1100px; }
+  .ep-meta .lbl { color: var(--text-faint); margin-right: 4px; font-size: 12px; }
+  .ep-task { flex: none; font-size: 13px; margin: 8px 0 0; }
+  .ep-task .lbl { color: var(--text-faint); font-size: 12px; margin-right: 6px; }
+  .ep-task .tid { font-weight: 500; background: var(--chip-bg); border: 1px solid var(--border); padding: 2px 8px; }
+
+  .section-title-line { display: flex; align-items: flex-end; gap: 16px; margin: 14px 0 8px; }
+  .title_left { font-size: 18px; font-weight: 500; margin: 0; white-space: nowrap; }
+  .title-line { flex: 1; height: 1.5px; background: var(--border); margin-bottom: 4px; }
+  .seg-head { flex: none; }
+  .seg-scroll { flex: 1; min-height: 0; overflow-y: auto; }
+
+  .seg-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .seg-table th, .seg-table td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .seg-table th { font-weight: 400; color: var(--text-faint); font-size: 12px; position: sticky; top: 0; background: var(--bg); z-index: 1; }
+  .seg-table tr.active-seg { background: rgba(255, 119, 0, 0.10); }
+  .seg-table tr.v-ok { background: var(--ok-soft); }
+  .seg-table tr.v-no { background: var(--no-soft); }
+  .seg-table tr.v-ok.active-seg { background: rgba(26,143,60,0.20); }
+  .seg-table tr.v-no.active-seg { background: rgba(192,57,43,0.20); }
+  .seg-table td.t-idx { color: var(--text-faint); width: 28px; }
+  .seg-table td.t-time { white-space: nowrap; width: 140px; color: var(--text-muted); }
+  .seg-table td.t-label { min-width: 200px; }
+  .rep-tag { font-size: 10px; color: var(--text-faint); background: var(--chip-bg);
+    border: 1px solid var(--border); border-radius: 2px; padding: 0 4px; margin-left: 6px; white-space: nowrap; }
+  .seek-btn { background: none; border: none; padding: 0; cursor: pointer; font: inherit; font-weight: 300;
+    color: var(--text); font-variant-numeric: tabular-nums;
+    background-image: linear-gradient(to top, var(--accent-soft) 0%, var(--accent-soft) 75%);
+    background-size: 100% 2px; background-repeat: no-repeat; background-position: bottom;
+    transition: background-size .3s ease, color .3s ease; }
+  .seek-btn:hover { color: #fff; background-size: 100% 100%; }
+
+  .t-audit { width: 92px; white-space: nowrap; }
+  .vbtn { font: inherit; font-size: 14px; line-height: 1; cursor: pointer; width: 34px; height: 28px;
+    border: 1px solid var(--border); background: var(--bg); color: var(--text-faint); border-radius: 0; }
+  .vbtn + .vbtn { margin-left: 4px; }
+  .vbtn.appr:hover, .vbtn.appr.on { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .vbtn.rej:hover, .vbtn.rej.on { background: var(--no); border-color: var(--no); color: #fff; }
+  .t-reason { width: 330px; min-width: 280px; }
+  .reason-grid { display: grid; grid-template-columns: repeat(3, minmax(82px, 1fr)); gap: 4px;
+    padding: 5px; border: 1px solid var(--border); background: var(--bg); }
+  .reason-grid.pending { border-color: var(--no); box-shadow: inset 0 0 0 1px var(--no); }
+  .reason-grid.disabled { background: #f5f5f5; }
+  .reason-choice { display: flex; align-items: center; gap: 5px; min-width: 0; padding: 3px 4px;
+    font-size: 11px; line-height: 1.2; color: var(--text-muted); cursor: pointer; }
+  .reason-choice:hover { background: var(--accent-soft); color: var(--text); }
+  .reason-grid.disabled .reason-choice { color: var(--text-faint); cursor: not-allowed; }
+  .reason-choice input { margin: 0; accent-color: var(--no); flex: 0 0 auto; }
+  .t-notes { width: 220px; }
+  .note-in { width: 100%; box-sizing: border-box; font: inherit; font-size: 12px; font-weight: 300;
+    padding: 5px 8px; border: 1px solid var(--border); border-radius: 0; background: var(--bg); color: var(--text); }
+  .note-in:focus { outline: none; border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+
+  .timebar-wrap { max-width: 1100px; margin-top: 12px; }
+  .timebar { position: relative; width: 100%; height: 40px; background: #fafafa; border: 1px solid var(--border); cursor: pointer; overflow: hidden; }
+  .tb-seg { position: absolute; top: 0; height: 100%; box-sizing: border-box; border-right: 1px solid #fff; background: #e4e4e4; }
+  .tb-seg.v-ok { background: #bfe3c9; } .tb-seg.v-no { background: #f0c2bc; }
+  .tb-seg.active { background: #ffce9e; z-index: 4; }
+  .tb-seg.active.v-ok { background: #8fd3a3; } .tb-seg.active.v-no { background: #e89a90; }
+  .timebar:hover .tb-seg.hovered { filter: brightness(0.92); }
+  .playhead { position: absolute; top: 0; height: 100%; width: 2px; background: var(--accent); pointer-events: none; z-index: 5; }
+  #tbtip { position: fixed; background: var(--accent-tip); color: #fff; font-size: 12px; padding: 3px 9px;
+    border-radius: 3px; pointer-events: none; z-index: 300; opacity: 0; transition: opacity .12s; white-space: nowrap; transform: translate(-50%,-130%); }
+
+  @media (max-width: 900px) {
+    body { padding: 0 20px; }
+    .title { font-size: 32px; padding-top: 30px; }
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; max-height: none; border-right: none; padding-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 14px; }
+  }
+</style>
+</head>
+<body>
+<main id="main-content">
+  <header>
+    <h1 class="title" id="cover-title"></h1>
+    <p class="cover-date" id="cover-date"></p>
+    <div class="cover-stats" id="cover-stats"></div>
+    <p class="kbd-hint"><b>&uarr;&darr;</b> episode &middot; <b>&larr;&rarr;</b> segment &middot; <b>Space</b> play/pause &middot; <b>R</b> replay &middot; <b>A</b> approve seg &middot; <b>X</b> reject seg &middot; <b>F</b> fullscreen &middot; <b>M</b> mute &middot; <b>C</b> caption pos &middot; <b>/</b> search</p>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="filters">
+        <input id="search" type="text" placeholder="search by keyword (label or ID)&hellip;" />
+        <select id="sort">
+          <option value="default">Sort: default</option>
+          <option value="undone">Sort: least audited first</option>
+          <option value="done">Sort: most audited first</option>
+          <option value="dur-desc">Sort: longest duration</option>
+          <option value="dur-asc">Sort: shortest duration</option>
+          <option value="seg-desc">Sort: most segments</option>
+          <option value="seg-asc">Sort: fewest segments</option>
+        </select>
+      </div>
+      <div class="list" id="ep-list"></div>
+    </aside>
+    <section class="main" id="detail">
+      <p style="color:var(--text-faint); font-size:13px;">Select an episode from the list &rarr;</p>
+    </section>
+  </div>
+</main>
+<div id="tbtip"></div>
+
+<script>
+const DATA = __PAYLOAD__;
+const SLUG = (DATA.title || "audit").replace(/[^a-z0-9]+/gi, "_").toLowerCase();
+const LS_LAST = "molmoaudit_" + SLUG + "_last";
+const LS_AUDIT = "molmoaudit_" + SLUG + "_verdicts_v1";
+const LS_CAP = "molmoaudit_" + SLUG + "_cappos";
+const CAP_LABELS = ["Subtitle ↓", "Subtitle ↑", "Subtitle ✕"];  // 0 bottom, 1 top, 2 off
+let CAP_POS = 0;
+try { const c = localStorage.getItem(LS_CAP); if (c !== null) CAP_POS = (+c) || 0; } catch (e) {}
+function applyCapPos() {
+  const sub = document.getElementById("vsub");
+  if (sub) { sub.classList.remove("pos-top", "pos-off"); if (CAP_POS === 1) sub.classList.add("pos-top"); else if (CAP_POS === 2) sub.classList.add("pos-off"); }
+  const btn = document.getElementById("cap-btn");
+  if (btn) btn.textContent = CAP_LABELS[CAP_POS];
+}
+function cycleCap() { CAP_POS = (CAP_POS + 1) % 3; try { localStorage.setItem(LS_CAP, CAP_POS); } catch (e) {} applyCapPos(); }
+
+let AUDIT = {};
+try { AUDIT = JSON.parse(localStorage.getItem(LS_AUDIT)) || {}; } catch (e) { AUDIT = {}; }
+function saveAudit() { try { localStorage.setItem(LS_AUDIT, JSON.stringify(AUDIT)); } catch (e) {} }
+function getV(eid, i) { return (AUDIT[eid] && AUDIT[eid][i]) || {}; }
+const REJECTION_REASONS = ["missing action", "wrong action", "wrong object", "wrong hand", "added action", "wrong order", "plural", "unclear video", "other"];
+function reasonsOf(a) {
+  if (Array.isArray(a && a.r)) return a.r.filter(r => REJECTION_REASONS.includes(r));
+  if (typeof (a && a.r) === "string" && REJECTION_REASONS.includes(a.r)) return [a.r];
+  return [];
+}
+function hasReasons(a) { return reasonsOf(a).length > 0; }
+function setV(eid, i, patch) {
+  AUDIT[eid] = AUDIT[eid] || {};
+  const cur = AUDIT[eid][i] || {};
+  const next = Object.assign({}, cur, patch);
+  if (!next.v && !(next.n && next.n.length) && !hasReasons(next)) { delete AUDIT[eid][i]; if (!Object.keys(AUDIT[eid]).length) delete AUDIT[eid]; }
+  else AUDIT[eid][i] = next;
+  saveAudit();
+}
+function decidedCount(r) { let n = 0; r.segments.forEach(s => { const a = getV(r.episodeId, s.i); if (a.v === "approve" || (a.v === "reject" && hasReasons(a))) n++; }); return n; }
+
+DATA.rows.forEach(r => {
+  r._hay = (r.episodeId + " " + (r.taskId || "") + " " + (r.description || "") + " " +
+    r.segments.map(s => s.label || "").join(" ")).toLowerCase();
+});
+
+(function renderCover() {
+  document.getElementById("cover-title").textContent = DATA.title;
+  document.title = DATA.title;
+  document.getElementById("cover-date").textContent =
+    DATA.client + " · delivered " + DATA.deliveryDate + " · " + DATA.size + " audit runs";
+  refreshStats();
+})();
+
+function refreshStats() {
+  let approved = 0, rejected = 0, pendingReasons = 0, epsDone = 0;
+  DATA.rows.forEach(r => {
+    let d = 0;
+    r.segments.forEach(s => { const a = getV(r.episodeId, s.i); if (a.v === "approve") { approved++; d++; } else if (a.v === "reject" && hasReasons(a)) { rejected++; d++; } else if (a.v === "reject") { pendingReasons++; } });
+    if (r.segments.length && d === r.segments.length) epsDone++;
+  });
+  const decided = approved + rejected;
+  const stats = [
+    { label: "audit runs", value: DATA.size.toLocaleString(), cls: "" },
+    { label: "runs complete", value: epsDone + " / " + DATA.size, cls: "" },
+    { label: "total segments", value: DATA.totalSegments.toLocaleString(), cls: "" },
+    { label: "segments decided", value: decided.toLocaleString() + " (" + Math.round(decided / Math.max(DATA.totalSegments, 1) * 100) + "%)", cls: "" },
+    { label: "approved", value: approved.toLocaleString(), cls: "ok" },
+    { label: "rejected", value: rejected.toLocaleString(), cls: "no" },
+    { label: "rejections needing reason", value: pendingReasons.toLocaleString(), cls: pendingReasons ? "no" : "" },
+  ];
+  document.getElementById("cover-stats").innerHTML =
+    stats.map(s => `<div class="stat"><div class="stat-label">${s.label}</div><div class="stat-value ${s.cls}">${s.value}</div></div>`).join("") +
+    `<div class="export-wrap"><button class="btn" id="exp-csv">Export CSV</button></div>`;
+  document.getElementById("exp-csv").addEventListener("click", exportCSV);
+}
+
+const $list = document.getElementById("ep-list");
+const $detail = document.getElementById("detail");
+const $search = document.getElementById("search");
+const $sort = document.getElementById("sort");
+let currentIdx = null, rafId = null;
+
+function fmtTime(s) { const m = Math.floor(s / 60), r = s - m * 60; return `${m}:${r.toFixed(2).padStart(5, "0")}`; }
+
+function filtered() {
+  const q = $search.value.trim().toLowerCase();
+  let rows = DATA.rows.filter(r => !q || r._hay.includes(q));
+  const s = $sort.value;
+  if (s === "dur-desc") rows.sort((a, b) => (b.duration || 0) - (a.duration || 0));
+  else if (s === "dur-asc") rows.sort((a, b) => (a.duration || 0) - (b.duration || 0));
+  else if (s === "seg-desc") rows.sort((a, b) => b.segments.length - a.segments.length);
+  else if (s === "seg-asc") rows.sort((a, b) => a.segments.length - b.segments.length);
+  else if (s === "undone") rows.sort((a, b) => (decidedCount(a) / a.segments.length) - (decidedCount(b) / b.segments.length));
+  else if (s === "done") rows.sort((a, b) => (decidedCount(b) / b.segments.length) - (decidedCount(a) / a.segments.length));
+  return rows;
+}
+
+function renderList() {
+  const rows = filtered();
+  if (!rows.length) { $list.innerHTML = `<p style="color:var(--text-faint); font-size:13px; padding-top:14px;">No episodes match.</p>`; return; }
+  $list.innerHTML = rows.map(r => {
+    const d = decidedCount(r), full = d === r.segments.length;
+    const n = DATA.rows.indexOf(r) + 1;
+    return `<div class="ep-row${full ? " done" : ""}" data-idx="${DATA.rows.indexOf(r)}">
+      <div class="id"><b style="color:var(--text)">${n}</b><span style="color:var(--text-faint)">/${DATA.rows.length}</span> &middot; ${r.episodeId}</div>
+      <div class="stats"><span>${r.segments.length} segs</span><span style="color:var(--text-faint)">&middot;</span><span>${r.duration ? r.duration.toFixed(1) + "s" : "—"}</span></div>
+      <div class="prog${full ? " full" : ""}">${d}/${r.segments.length} audited</div>
+    </div>`;
+  }).join("");
+  $list.querySelectorAll(".ep-row").forEach(el => el.addEventListener("click", () => selectEpisode(parseInt(el.dataset.idx))));
+  if (currentIdx !== null) { const t = $list.querySelector(`.ep-row[data-idx="${currentIdx}"]`); if (t) t.classList.add("active"); }
+}
+
+function updateSidebarRow(idx) {
+  const r = DATA.rows[idx];
+  const el = $list.querySelector(`.ep-row[data-idx="${idx}"]`);
+  if (!el) return;
+  const d = decidedCount(r), full = d === r.segments.length;
+  el.classList.toggle("done", full);
+  const p = el.querySelector(".prog");
+  if (p) { p.textContent = `${d}/${r.segments.length} audited`; p.classList.toggle("full", full); }
+}
+
+function selectEpisode(idx) {
+  const r = DATA.rows[idx];
+  currentIdx = idx;
+  if (rafId != null) { cancelAnimationFrame(rafId); rafId = null; }
+  try { localStorage.setItem(LS_LAST, r.episodeId); } catch (e) {}
+  $list.querySelectorAll(".ep-row").forEach(el => el.classList.remove("active"));
+  const target = $list.querySelector(`.ep-row[data-idx="${idx}"]`);
+  if (target) { target.classList.add("active"); target.scrollIntoView({ block: "nearest" }); }
+
+  const videoHtml = r.videoUrl
+    ? `<div class="video-wrap"><video id="vp" controls muted preload="metadata" src="${r.videoUrl}"></video><button class="cap-btn" id="cap-btn" onclick="cycleCap()" title="Subtitle position (C)">Subtitle</button><div class="vsub hidden" id="vsub"><div class="vsub-text" id="vsub-text"></div><div class="vsub-bar"><div class="vsub-fill" id="vsub-fill"></div></div></div></div>`
+    : `<div class="video-wrap"><div class="placeholder">No signed video URL &middot; ${r.videoUri || "—"}</div></div>`;
+
+  const labCount = {};
+  r.segments.forEach(s => { const l = (s.label || "").trim().toLowerCase(); if (l) labCount[l] = (labCount[l] || 0) + 1; });
+
+  $detail.innerHTML = `
+    <div class="viewer-sticky">
+      ${videoHtml}
+      <div class="timebar-wrap"><div class="timebar" id="timebar"></div></div>
+    </div>
+    <div class="ep-desc">${escapeHtml(r.description || "No description")}</div>
+    <div class="ep-meta">
+      <div><span class="lbl">Episode</span><span class="val">${r.episodeId}</span></div>
+      <div><span class="lbl">User task</span><span class="val">${r.userTaskId || "—"}</span></div>
+      <div><span class="lbl">Duration</span><span class="val">${r.duration ? r.duration.toFixed(1) + "s" : "—"}</span></div>
+      <div><span class="lbl">Segments</span><span class="val">${r.segments.length}</span></div>
+    </div>
+    <div class="ep-task"><span class="lbl">Task</span><span class="tid">${escapeHtml(r.taskId || "—")}</span></div>
+    <div class="seg-head"><div class="section-title-line"><h2 class="title_left">Candidate segments</h2><div class="title-line"></div></div></div>
+    <div class="seg-scroll">
+      <table class="seg-table">
+        <thead><tr><th>#</th><th>time</th><th>candidate label</th><th>audit</th><th>rejection reason</th><th>notes</th></tr></thead>
+        <tbody>
+          ${r.segments.map(s => {
+            const lc = labCount[(s.label || "").trim().toLowerCase()] || 0;
+            const repTag = lc > 1 ? ` <span class="rep-tag" title="appears ${lc}× in this episode">&times;${lc}</span>` : "";
+            const a = getV(r.episodeId, s.i);
+            const rowCls = a.v === "approve" ? "v-ok" : a.v === "reject" ? "v-no" : "";
+            return `<tr data-seg="${s.i}" class="${rowCls}">
+              <td class="t-idx">${s.i}</td>
+              <td class="t-time"><button class="seek-btn" data-start="${s.start}">${fmtTime(s.start)} &rarr; ${fmtTime(s.end)}</button></td>
+              <td class="t-label">${escapeHtml(s.label || "—")}${repTag}</td>
+              <td class="t-audit">
+                <button class="vbtn appr${a.v === "approve" ? " on" : ""}" data-seg="${s.i}" data-v="approve" title="approve (A)">&#10003;</button>
+                <button class="vbtn rej${a.v === "reject" ? " on" : ""}" data-seg="${s.i}" data-v="reject" title="reject (X)">&#10007;</button>
+              </td>
+              <td class="t-reason"><div class="reason-grid${a.v === "reject" && !hasReasons(a) ? " pending" : ""}${a.v === "reject" ? "" : " disabled"}" data-seg="${s.i}">
+                ${REJECTION_REASONS.map(reason => `<label class="reason-choice"><input type="checkbox" value="${reason}" ${reasonsOf(a).includes(reason) ? "checked" : ""} ${a.v === "reject" ? "" : "disabled"}><span>${reason}</span></label>`).join("")}
+              </div></td>
+              <td class="t-notes"><input class="note-in" data-seg="${s.i}" placeholder="note&hellip;" value="${escapeAttr(a.n || "")}"></td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>`;
+
+  const video = document.getElementById("vp");
+  $detail.querySelectorAll(".seek-btn").forEach(btn => btn.addEventListener("click", () => {
+    if (!video) return; video.currentTime = parseFloat(btn.dataset.start); window._auditStopAt = r.segments.find(s => s.i === parseInt(btn.closest("tr").dataset.seg))?.end ?? null; video.play();
+  }));
+  $detail.querySelectorAll(".vbtn").forEach(btn => btn.addEventListener("click", () => {
+    const i = parseInt(btn.dataset.seg), v = btn.dataset.v;
+    const cur = getV(r.episodeId, i).v;
+    toggleVerdict(r, i, cur === v ? null : v);
+  }));
+  $detail.querySelectorAll(".reason-grid").forEach(grid => {
+    grid.addEventListener("change", () => {
+      const reasons = [...grid.querySelectorAll('input[type="checkbox"]:checked')].map(input => input.value);
+      setV(r.episodeId, parseInt(grid.dataset.seg), { r: reasons });
+      grid.classList.toggle("pending", reasons.length === 0);
+      updateSidebarRow(DATA.rows.indexOf(r));
+      refreshStats();
+    });
+  });
+  $detail.querySelectorAll(".note-in").forEach(inp => inp.addEventListener("input", () => {
+    setV(r.episodeId, parseInt(inp.dataset.seg), { n: inp.value });
+  }));
+
+  buildTimebar(r, video);
+
+  const vsub = document.getElementById("vsub");
+  applyCapPos();
+  if (video) {
+    const syncTime = () => {
+      const t = video.currentTime;
+      let activeSeg = null, activeLabel = "";
+      for (const s of r.segments) { if (t >= s.start && t < s.end) { activeSeg = s.i; activeLabel = s.label || ""; break; } }
+      document.querySelectorAll(".seg-table tr").forEach(tr => tr.classList.remove("active-seg"));
+      document.querySelectorAll(".tb-seg").forEach(el => el.classList.toggle("active", activeSeg !== null && parseInt(el.dataset.seg) === activeSeg));
+      const ph = document.getElementById("playhead");
+      const tbStart = r._tbStart, tbSpan = r._tbSpan;
+      if (ph) ph.style.left = Math.max(0, Math.min(100, ((t - tbStart) / tbSpan) * 100)) + "%";
+      if (activeSeg !== null) { const row = document.querySelector(`.seg-table tr[data-seg="${activeSeg}"]`); if (row) row.classList.add("active-seg"); }
+      const vtext = document.getElementById("vsub-text");
+      if (vtext) vtext.textContent = activeLabel;
+      if (vsub) vsub.classList.toggle("hidden", !activeLabel);
+    };
+    video.addEventListener("timeupdate", () => { syncTime(); if (window._auditStopAt != null && video.currentTime >= window._auditStopAt) { video.pause(); window._auditStopAt = null; } }); syncTime();
+    const paint = () => {
+      const t = video.currentTime; let seg = null;
+      for (const s of r.segments) { if (t >= s.start && t < s.end) { seg = s; break; } }
+      const fill = document.getElementById("vsub-fill");
+      if (fill) { let pct = 0; if (seg) { const sp = seg.end - seg.start; pct = sp > 0 ? Math.min(1, Math.max(0, (t - seg.start) / sp)) * 100 : 0; } fill.style.width = pct + "%"; }
+      rafId = requestAnimationFrame(paint);
+    };
+    paint();
+  }
+}
+
+function buildTimebar(r, video) {
+  const timebar = document.getElementById("timebar");
+  const tbtip = document.getElementById("tbtip");
+  const tbStart = r.segments.length ? Math.min(...r.segments.map(s => s.start)) : 0;
+  const tbEnd = r.segments.length ? Math.max(...r.segments.map(s => s.end)) : 1;
+  const tbSpan = (tbEnd - tbStart) || 1;
+  r._tbStart = tbStart; r._tbSpan = tbSpan;
+  timebar.innerHTML = r.segments.map(s => {
+    const left = ((s.start - tbStart) / tbSpan) * 100;
+    const w = Math.max(((s.end - s.start) / tbSpan) * 100, 0.15);
+    const v = getV(r.episodeId, s.i).v;
+    const vc = v === "approve" ? " v-ok" : v === "reject" ? " v-no" : "";
+    return `<div class="tb-seg${vc}" data-seg="${s.i}" style="left:${left}%;width:${w}%"></div>`;
+  }).join("") + `<div class="playhead" id="playhead" style="left:0%"></div>`;
+  function tbTime(e) { const rect = timebar.getBoundingClientRect(); const frac = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)); return tbStart + frac * tbSpan; }
+  timebar.addEventListener("click", e => { if (!video) return; video.currentTime = tbTime(e); video.play(); });
+  timebar.addEventListener("mousemove", e => {
+    const t = tbTime(e); let seg = null;
+    for (const s of r.segments) { if (t >= s.start && t < s.end) { seg = s; break; } }
+    timebar.querySelectorAll(".tb-seg").forEach(el => el.classList.toggle("hovered", seg && parseInt(el.dataset.seg) === seg.i));
+    if (seg) { tbtip.textContent = `${fmtTime(seg.start)} · ${seg.label || "—"}`; tbtip.style.left = e.clientX + "px"; tbtip.style.top = e.clientY + "px"; tbtip.style.opacity = 1; }
+    else tbtip.style.opacity = 0;
+  });
+  timebar.addEventListener("mouseleave", () => { tbtip.style.opacity = 0; timebar.querySelectorAll(".tb-seg.hovered").forEach(el => el.classList.remove("hovered")); });
+}
+
+function toggleVerdict(r, i, v) {
+  setV(r.episodeId, i, { v: v, r: v === "reject" ? reasonsOf(getV(r.episodeId, i)) : [] });
+  const tr = document.querySelector(`.seg-table tr[data-seg="${i}"]`);
+  if (tr) {
+    tr.classList.toggle("v-ok", v === "approve");
+    tr.classList.toggle("v-no", v === "reject");
+    tr.querySelectorAll(".vbtn").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+    const reason = tr.querySelector(".reason-grid");
+    if (reason) {
+      reason.classList.toggle("disabled", v !== "reject");
+      reason.querySelectorAll('input[type="checkbox"]').forEach(input => { input.disabled = v !== "reject"; if (v !== "reject") input.checked = false; });
+      reason.classList.toggle("pending", v === "reject" && !hasReasons(getV(r.episodeId, i)));
+    }
+  }
+  const tb = document.querySelector(`.tb-seg[data-seg="${i}"]`);
+  if (tb) { tb.classList.toggle("v-ok", v === "approve"); tb.classList.toggle("v-no", v === "reject"); }
+  updateSidebarRow(DATA.rows.indexOf(r));
+  refreshStats();
+}
+
+function escapeHtml(s) { if (s == null) return ""; return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+function escapeAttr(s) { return escapeHtml(s); }
+
+// --- CSV export ---
+function csvCell(v) { const s = v == null ? "" : String(v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function exportCSV() {
+  const header = ["audit_run_id", "source_episode_id", "user_task_id", "task_id", "segment", "start_seconds", "end_seconds", "candidate_label", "confidence_avg", "verdict", "rejection_reason", "notes"];
+  const lines = [header.map(csvCell).join(",")];
+  DATA.rows.forEach(r => r.segments.forEach(s => {
+    const a = getV(r.episodeId, s.i);
+    lines.push([r.episodeId, r.sourceEpisodeId || "", r.userTaskId || "", r.taskId || "", s.i, s.start, s.end, s.label || "", s.conf == null ? "" : s.conf, a.v || "", reasonsOf(a).join("; "), a.n || ""].map(csvCell).join(","));
+  }));
+  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const d = new Date();
+  const stamp = String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
+  const a = document.createElement("a");
+  a.href = url; a.download = `${stamp}_${SLUG}_results.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// --- keyboard ---
+function curSegIdx() {
+  const r = DATA.rows[currentIdx], v = document.getElementById("vp");
+  if (!r || !v || !r.segments.length) return -1;
+  const t = v.currentTime; let i = 0;
+  for (let k = 0; k < r.segments.length; k++) { if (r.segments[k].start <= t + 0.05) i = k; else break; }
+  return i;
+}
+function stepEpisode(delta) { const list = filtered(); if (!list.length) return; let pos = list.indexOf(DATA.rows[currentIdx]); if (pos < 0) pos = delta > 0 ? -1 : list.length; pos = Math.max(0, Math.min(list.length - 1, pos + delta)); selectEpisode(DATA.rows.indexOf(list[pos])); }
+function stepSegment(delta) { const r = DATA.rows[currentIdx], v = document.getElementById("vp"); if (!r || !v || !r.segments.length) return; let i = curSegIdx(); if (i < 0) i = 0; i = Math.max(0, Math.min(r.segments.length - 1, i + delta)); v.currentTime = r.segments[i].start; v.play(); }
+function replaySegment() { const r = DATA.rows[currentIdx], v = document.getElementById("vp"); if (!r || !v) return; const i = curSegIdx(); if (i >= 0) { v.currentTime = r.segments[i].start; v.play(); } }
+function verdictCurrent(v) { const r = DATA.rows[currentIdx]; if (!r) return; const i = curSegIdx(); if (i < 0) return; const cur = getV(r.episodeId, i).v; toggleVerdict(r, i, cur === v ? null : v); }
+
+document.addEventListener("keydown", e => {
+  const tag = (document.activeElement && document.activeElement.tagName) || "";
+  if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") { if (e.key === "Escape") document.activeElement.blur(); return; }
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const v = document.getElementById("vp");
+  switch (e.key) {
+    case "ArrowDown": e.preventDefault(); stepEpisode(1); break;
+    case "ArrowUp": e.preventDefault(); stepEpisode(-1); break;
+    case "ArrowRight": e.preventDefault(); stepSegment(1); break;
+    case "ArrowLeft": e.preventDefault(); stepSegment(-1); break;
+    case " ": e.preventDefault(); if (v) { v.paused ? v.play() : v.pause(); } break;
+    case "r": case "R": e.preventDefault(); replaySegment(); break;
+    case "a": case "A": e.preventDefault(); verdictCurrent("approve"); break;
+    case "x": case "X": e.preventDefault(); verdictCurrent("reject"); break;
+    case "f": case "F": e.preventDefault(); if (v && v.requestFullscreen) v.requestFullscreen(); break;
+    case "m": case "M": e.preventDefault(); if (v) v.muted = !v.muted; break;
+    case "c": case "C": e.preventDefault(); cycleCap(); break;
+    case "/": e.preventDefault(); $search.focus(); $search.select(); break;
+  }
+});
+
+$search.addEventListener("input", renderList);
+$sort.addEventListener("change", renderList);
+renderList();
+
+let _opened = false;
+try { const saved = localStorage.getItem(LS_LAST); if (saved) { const i = DATA.rows.findIndex(r => r.episodeId === saved); if (i >= 0) { selectEpisode(i); _opened = true; } } } catch (e) {}
+if (!_opened) { const first = filtered()[0]; if (first) selectEpisode(DATA.rows.indexOf(first)); }
+
+// Provenance footer — renders only when the payload carries a provenance[] list.
+if (Array.isArray(DATA.provenance) && DATA.provenance.length) {
+  const f = document.createElement("footer");
+  f.style.cssText = "max-width:1520px;margin:28px auto 40px;padding:14px 24px;border-top:1px solid #e8e8e8;font-size:11px;line-height:1.7;color:#999;font-weight:300;";
+  f.innerHTML = "<div style='letter-spacing:.08em;text-transform:uppercase;color:#ff7700;margin-bottom:6px;'>Data provenance</div>" +
+    "<ol style='margin:0;padding-left:18px;'>" + DATA.provenance.map(s => "<li>" + s + "</li>").join("") + "</ol>" +
+    "<div style='margin-top:6px;'>generated " + (DATA.generatedAt || "") + "</div>";
+  document.body.appendChild(f);
+}
+</script>
+</body>
+</html>
