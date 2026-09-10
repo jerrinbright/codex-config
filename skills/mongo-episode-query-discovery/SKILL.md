@@ -158,6 +158,10 @@ Read [episode-query-fields.md](references/episode-query-fields.md) when the user
 
 Read [query-performance.md](references/query-performance.md) before bulk exports, aggregates, delivery checks, annotation/embedding coverage queries, ClickHouse work, or any query where BSON type, covering-index behavior, or a silent zero could affect correctness.
 
+## Delivery Readiness
+
+If the user asks about delivery readiness, exclusivity, whether a candidate list is safe to ship, cross-client conflicts, `isExclusive`, `is_strict_ready`, or the `delivery-suite/qa-check` page — hand off to the [[delivery-readiness-check]] skill. It carries the canonical ClickHouse queries (`getEpisodeDeliveryStates`, `verifyEpisodesStrictReady`, `verifyEpisodesNotRejected`) and the Mongo cross-check with the correct mixed-BSON `delivered.episode_id` probe.
+
 ## Communication
 
 - Be precise about what is known from metadata versus inferred from episode fields.
