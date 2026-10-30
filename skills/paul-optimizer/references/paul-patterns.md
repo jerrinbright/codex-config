@@ -1,5 +1,10 @@
 # Paul-Style Optimization Pattern Catalog
 
+For concrete implementations, reported measurements and caveats, consult
+[Mecka PR recipes (2026-10-30)](mecka-pr-recipes-20261030.md). Select only the
+sections relevant to the measured bottleneck; historical results require fresh
+service-path qualification.
+
 ## 1. Native Resident Host
 
 Replace Python orchestration with a resident C++/CUDA/TensorRT host when Python/GIL/subprocess/model-load overhead dominates.

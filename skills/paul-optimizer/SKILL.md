@@ -47,6 +47,7 @@ Read these files only as needed:
 - `references/swarm-architecture.md`: verifier-first swarm design and agent roles.
 - `references/wireframe.md`: visual wireframe for the optimization algorithm.
 - `references/paul-patterns.md`: optimization pattern catalog distilled from the PRs.
+- `references/mecka-pr-recipes-20261030.md`: source-linked transfer, native, memory, query and build recipes, with measured scope and rejected/tradeoff evidence. Consult the relevant section when selecting experiments; reported PR results are not qualification of the current service.
 - `references/verifier-contract.md`: required verifier gates and report schema.
 - `templates/experiment_plan.md`: plan format for an optimization campaign.
 - `templates/verifier_brief.md`: prompt/brief for the verifier sub-agent.

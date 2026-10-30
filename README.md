@@ -87,6 +87,11 @@ Use these for paper, poster, and talk scaffolding.
 4. It accepts candidates only after the verifier certifies them on comparable hardware.
 5. For smaller single-agent optimization work, trigger `optimization-orchestrator`.
 
+Paul Optimizer's [dated Mecka PR catalog](skills/paul-optimizer/references/mecka-pr-recipes-20261030.md)
+adds source-linked native, transfer, reuse, query and build recipes. Reported
+measurements, experimental candidates and negative tradeoffs remain distinct;
+they guide experiments rather than qualifying a new service automatically.
+
 ### Plan A Fine-Tuning Run
 
 1. Trigger `finetuning-orchestrator`.
